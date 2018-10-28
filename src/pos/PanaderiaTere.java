@@ -1,14 +1,21 @@
+package pos;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-import view.VentasView;
+import pos.util.Config;
+import pos.view.VentasView;
+
 /**
  *
  * @author Darío Jiménez
  */
 public class PanaderiaTere {
+
+    public static double version = 0.1;
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -36,8 +43,24 @@ public class PanaderiaTere {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new VentasView().setVisible(true);
+                Config c = new Config();
+                boolean exists = c.existsConfigDir();
+                boolean inicio = false;
+                if (exists) {
+                    if (c.isCompatible()) {
+                        inicio = true;
+                    } else {
+                        System.out.println("Revisar la configuración.");
+                    }
+                } else {
+                    System.out.println("No existe instalación anterior!");
+                    inicio = c.makeConfig();
+                }
+                // Carga pantalla principal
+                if (inicio) {
+                    new VentasView().setVisible(true);
+                }
             }
         });
-    }   
+    }
 }

@@ -3,7 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package view;
+package pos.view;
+
+import javax.swing.table.DefaultTableModel;
+import pos.model.Producto;
 
 /**
  *
@@ -16,6 +19,21 @@ public class VentasView extends javax.swing.JFrame {
      */
     public VentasView() {
         initComponents();
+        initProductsTable();
+    }
+
+    private void initProductsTable() {
+        DefaultTableModel modelo = (DefaultTableModel) tableItems.getModel();
+        tableItems.getColumn("Id").setMaxWidth(50);
+        // Nota: Vaciar tabla antes de insertar renglones
+        Producto.all().forEach((producto) -> {
+            modelo.addRow(new Object[]{
+                producto.getId(),
+                producto.getNombre(),
+                producto.getPrecio(),
+                producto.getStock()
+            });
+        });
     }
 
     /**
@@ -51,15 +69,20 @@ public class VentasView extends javax.swing.JFrame {
 
         tableItems.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Id", "Nombre", "Precio", "Stock"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(tableItems);
 
         btnCobrar.setText("Cobrar");
