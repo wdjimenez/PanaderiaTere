@@ -72,6 +72,10 @@ public class Producto {
     public void setStock(int stock) {
         this.stock = stock;
     }
+    
+    public String toString() { 
+        return this.getNombre();
+    } 
 
     public static Producto find(int id) {
         conn = DataBase.getConnection();

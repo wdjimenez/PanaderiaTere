@@ -5,8 +5,11 @@
  */
 package pos.view;
 
+import com.mxrck.autocompleter.TextAutoCompleter;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import pos.model.Producto;
+import pos.model.ItemVentas;
 
 /**
  *
@@ -14,26 +17,52 @@ import pos.model.Producto;
  */
 public class VentasView extends javax.swing.JFrame {
 
+    private TextAutoCompleter ac;
     /**
      * Creates new form PanaderiaTere
      */
     public VentasView() {
         initComponents();
+        initAutoCompleter();
         initProductsTable();
+    }
+    
+    private void initAutoCompleter(){
+        ac = new TextAutoCompleter(textBuscar);
+        ac.setMode(0);
+        Producto.all().forEach((producto) -> {
+            ac.addItem(producto);
+        });
     }
 
     private void initProductsTable() {
-        DefaultTableModel modelo = (DefaultTableModel) tableItems.getModel();
-        tableItems.getColumn("Id").setMaxWidth(50);
-        // Nota: Vaciar tabla antes de insertar renglones
-        Producto.all().forEach((producto) -> {
-            modelo.addRow(new Object[]{
-                producto.getId(),
-                producto.getNombre(),
-                producto.getPrecio(),
-                producto.getStock()
-            });
-        });
+//        DefaultTableModel modelo = (DefaultTableModel) tableItems.getModel();
+//        tableItems.getColumn("Id").setMaxWidth(50);
+//        // Nota: Vaciar tabla antes de insertar renglones
+//        Producto.all().forEach((producto) -> {
+//            modelo.addRow(new Object[]{
+//                producto.getId(),
+//                producto.getNombre(),
+//                producto.getPrecio(),
+//                producto.getStock()
+//            });
+//        });
+    }
+    
+    private void calculaTotalVenta(){
+        DefaultTableModel dtm = (DefaultTableModel) tableItems.getModel();
+        int nRow = dtm.getRowCount(), nCol = dtm.getColumnCount();
+        float total=0;
+        
+        textTotal.setText("");
+        for (int i = 0 ; i < nRow ; i++){
+//            for (int j = 0 ; j < nCol ; j++){
+//                item = (ItemVentas)dtm.getValueAt(i,j);
+                total += (float)dtm.getValueAt(i,3);
+//            }
+        }
+        textTotal.setText(Float.toString(total));
+        
     }
 
     /**
@@ -51,6 +80,8 @@ public class VentasView extends javax.swing.JFrame {
         btnCobrar = new javax.swing.JButton();
         btnLimpiar = new javax.swing.JButton();
         btnEntradas = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        textTotal = new javax.swing.JFormattedTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -66,17 +97,22 @@ public class VentasView extends javax.swing.JFrame {
         setTitle("Panaderia Tere");
 
         textBuscar.setToolTipText("Introduzca el producto aquí");
+        textBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textBuscarActionPerformed(evt);
+            }
+        });
 
         tableItems.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Id", "Nombre", "Precio", "Stock"
+                "Nombre", "Precio", "Cantidad", "Importe"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, true, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -88,8 +124,26 @@ public class VentasView extends javax.swing.JFrame {
         btnCobrar.setText("Cobrar");
 
         btnLimpiar.setText("Limpiar");
+        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarActionPerformed(evt);
+            }
+        });
 
         btnEntradas.setText("Entradas");
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel1.setText("Total");
+
+        textTotal.setEditable(false);
+        textTotal.setForeground(new java.awt.Color(255, 0, 51));
+        textTotal.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
+        textTotal.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        textTotal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textTotalActionPerformed(evt);
+            }
+        });
 
         jMenu2.setText("Productos");
 
@@ -140,6 +194,10 @@ public class VentasView extends javax.swing.JFrame {
                     .addComponent(textBuscar, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(btnEntradas)
+                        .addGap(97, 97, 97)
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(textTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnLimpiar)
                         .addGap(34, 34, 34)
@@ -153,12 +211,20 @@ public class VentasView extends javax.swing.JFrame {
                 .addComponent(textBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 401, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnCobrar)
-                    .addComponent(btnLimpiar)
-                    .addComponent(btnEntradas))
-                .addGap(31, 31, 31))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnCobrar)
+                            .addComponent(btnLimpiar)
+                            .addComponent(btnEntradas))
+                        .addGap(31, 31, 31))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(textTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         pack();
@@ -167,6 +233,53 @@ public class VentasView extends javax.swing.JFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void textBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textBuscarActionPerformed
+        // TODO add your handling code here:
+        Producto p;
+        ItemVentas item;
+        int nPanes;
+        
+        p = (Producto)ac.getItemSelected();
+        
+        if (p != null) {
+           nPanes = Integer.parseInt(JOptionPane.showInputDialog(null, "¿Cuántos panes desea agregar?"));
+           
+           item = new ItemVentas(p, nPanes);
+           
+           DefaultTableModel modelo = (DefaultTableModel) tableItems.getModel();          
+           
+           modelo.addRow(new Object[]{
+                item.getProd(),
+                item.getPrecio(),
+                item.getCantidad(),
+                item.getImporte()           
+           });           
+        }
+        
+        calculaTotalVenta();
+        textBuscar.setText("");
+        
+    }//GEN-LAST:event_textBuscarActionPerformed
+
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        // TODO add your handling code here:
+        String res;
+        DefaultTableModel modelo = (DefaultTableModel) tableItems.getModel();
+        
+        res = JOptionPane.showInputDialog(null, "¿Desea borrar el contenido de la tabla?[S=Sí/N=No]");
+        
+        if (res.length() > 0 && res.charAt(0) == 'S') {
+            modelo.setRowCount(0);
+        }
+        
+        calculaTotalVenta();
+        
+    }//GEN-LAST:event_btnLimpiarActionPerformed
+
+    private void textTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textTotalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textTotalActionPerformed
 
     /**
      * @param args the command line arguments
@@ -207,6 +320,7 @@ public class VentasView extends javax.swing.JFrame {
     public javax.swing.JButton btnCobrar;
     public javax.swing.JButton btnEntradas;
     public javax.swing.JButton btnLimpiar;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
@@ -220,5 +334,6 @@ public class VentasView extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     public javax.swing.JTable tableItems;
     public javax.swing.JTextField textBuscar;
+    private javax.swing.JFormattedTextField textTotal;
     // End of variables declaration//GEN-END:variables
 }
