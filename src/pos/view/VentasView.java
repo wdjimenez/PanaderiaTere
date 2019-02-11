@@ -25,6 +25,8 @@ public class VentasView extends javax.swing.JFrame {
         initComponents();
         initAutoCompleter();
         initProductsTable();
+        
+        calculaTotalVenta();
     }
     
     private void initAutoCompleter(){
@@ -61,7 +63,8 @@ public class VentasView extends javax.swing.JFrame {
                 total += (float)dtm.getValueAt(i,3);
 //            }
         }
-        textTotal.setText(Float.toString(total));
+        
+        textTotal.setValue(new Double(total));
         
     }
 
@@ -79,9 +82,9 @@ public class VentasView extends javax.swing.JFrame {
         tableItems = new javax.swing.JTable();
         btnCobrar = new javax.swing.JButton();
         btnLimpiar = new javax.swing.JButton();
-        btnEntradas = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         textTotal = new javax.swing.JFormattedTextField();
+        jButton1 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -95,6 +98,7 @@ public class VentasView extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Panaderia Tere");
+        setResizable(false);
 
         textBuscar.setToolTipText("Introduzca el producto aquí");
         textBuscar.addActionListener(new java.awt.event.ActionListener() {
@@ -123,14 +127,12 @@ public class VentasView extends javax.swing.JFrame {
 
         btnCobrar.setText("Cobrar");
 
-        btnLimpiar.setText("Limpiar");
+        btnLimpiar.setText("Reiniciar venta");
         btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLimpiarActionPerformed(evt);
             }
         });
-
-        btnEntradas.setText("Entradas");
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel1.setText("Total");
@@ -142,6 +144,13 @@ public class VentasView extends javax.swing.JFrame {
         textTotal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textTotalActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("Eliminar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
             }
         });
 
@@ -193,14 +202,14 @@ public class VentasView extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 685, Short.MAX_VALUE)
                     .addComponent(textBuscar, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btnEntradas)
-                        .addGap(97, 97, 97)
+                        .addComponent(jButton1)
+                        .addGap(99, 99, 99)
                         .addComponent(jLabel1)
                         .addGap(18, 18, 18)
                         .addComponent(textTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnLimpiar)
-                        .addGap(34, 34, 34)
+                        .addGap(31, 31, 31)
                         .addComponent(btnCobrar)))
                 .addContainerGap())
         );
@@ -213,17 +222,18 @@ public class VentasView extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 401, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnCobrar)
-                            .addComponent(btnLimpiar)
-                            .addComponent(btnEntradas))
+                            .addComponent(btnLimpiar))
                         .addGap(31, 31, 31))
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(textTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel1)
+                                .addComponent(textTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jButton1))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
@@ -281,6 +291,20 @@ public class VentasView extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_textTotalActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        int i = tableItems.getSelectedRow();
+        DefaultTableModel modelo = (DefaultTableModel) tableItems.getModel();
+        
+        if (i >= 0){
+            modelo.removeRow(i);
+        }else{
+            JOptionPane.showMessageDialog(null, "No se selecciono ningun registro para eliminar");
+        }
+        
+        calculaTotalVenta();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -318,8 +342,8 @@ public class VentasView extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton btnCobrar;
-    public javax.swing.JButton btnEntradas;
     public javax.swing.JButton btnLimpiar;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
