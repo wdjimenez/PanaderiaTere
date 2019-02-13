@@ -6,10 +6,13 @@
 package pos.view;
 
 import com.mxrck.autocompleter.TextAutoCompleter;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import pos.model.Producto;
 import pos.model.ItemVentas;
+import pos.model.Ventas;
 
 /**
  *
@@ -53,7 +56,7 @@ public class VentasView extends javax.swing.JFrame {
     
     private void calculaTotalVenta(){
         DefaultTableModel dtm = (DefaultTableModel) tableItems.getModel();
-        int nRow = dtm.getRowCount(), nCol = dtm.getColumnCount();
+        int nRow = dtm.getRowCount();
         float total=0;
         
         textTotal.setText("");
@@ -126,6 +129,11 @@ public class VentasView extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tableItems);
 
         btnCobrar.setText("Cobrar");
+        btnCobrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCobrarActionPerformed(evt);
+            }
+        });
 
         btnLimpiar.setText("Reiniciar venta");
         btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
@@ -246,44 +254,83 @@ public class VentasView extends javax.swing.JFrame {
 
     private void textBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textBuscarActionPerformed
         // TODO add your handling code here:
-        Producto p;
+        Producto pNuevo, pOld;
         ItemVentas item;
-        int nPanes;
+        int nPanes = 0, consumo = 0, index = -1, stock;
         
-        p = (Producto)ac.getItemSelected();
+        pNuevo = (Producto)ac.getItemSelected();
         
-        if (p != null) {
-           nPanes = Integer.parseInt(JOptionPane.showInputDialog(null, "¿Cuántos panes desea agregar?"));
-           
-           item = new ItemVentas(p, nPanes);
-           
-           DefaultTableModel modelo = (DefaultTableModel) tableItems.getModel();          
-           
-           modelo.addRow(new Object[]{
-                item.getProd(),
-                item.getPrecio(),
-                item.getCantidad(),
-                item.getImporte()           
-           });           
+        if (pNuevo != null) {
+       
+            try{
+                nPanes = Integer.parseInt(JOptionPane.showInputDialog(null, "¿Cuántos panes desea agregar?"));
+            }catch(NumberFormatException e){
+                JOptionPane.showMessageDialog(null, "No se introdujo ningún número");       
+                System.out.println(e.getMessage());
+                
+                return;
+            }      
+            
+            DefaultTableModel modelo = (DefaultTableModel) tableItems.getModel();
+            
+            //Verificamos que haya Stock disponible
+            int nRow = modelo.getRowCount();
+            
+            consumo = nPanes;
+            for (int i = 0 ; i < nRow ; i++){
+                pOld = (Producto)modelo.getValueAt(i,0);
+                
+                System.out.println("Producto anterior " + pOld.getId() + " " + pOld.getNombre());
+                System.out.println("Producto nuevo " + pNuevo.getId() + " " + pNuevo.getNombre());
+                if (pOld.getId() == pNuevo.getId()){//Se trata del mismo producto, incrementamos el stock
+                    index = i;
+                    consumo += (int)modelo.getValueAt(i,2);
+//                    modelo.setValueAt(consumo, nRow, 2);
+                }
+            }
+            
+            System.out.println("Consumo total " + consumo);
+            System.out.println("Indice " + index);
+            
+            
+            //Verificamos que haya suficiente consumo
+            stock = Producto.getRealStock(pNuevo.getId());
+            
+            System.out.println("Stock real " + stock);
+            
+            if (stock < consumo) {
+                JOptionPane.showMessageDialog(null, "No hay suficiente stock de este producto");       
+                return;
+            }
+            
+            if(index >= 0){//Actualizamos un elemento ya existente
+                
+                modelo.setValueAt(consumo, index, 2);
+                
+                modelo.setValueAt(consumo * pNuevo.getPrecio(), index, 3);
+                
+            }else{//Nuevo elemento                 
+                       
+                item = new ItemVentas(pNuevo, consumo);
+
+                modelo.addRow(new Object[]{
+                     item.getProd(),
+                     item.getPrecio(),
+                     item.getCantidad(),
+                     item.getImporte()           
+                }); 
+            }
         }
         
         calculaTotalVenta();
-        textBuscar.setText("");
+        textBuscar.setText("");           
         
     }//GEN-LAST:event_textBuscarActionPerformed
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
         // TODO add your handling code here:
-        String res;
-        DefaultTableModel modelo = (DefaultTableModel) tableItems.getModel();
         
-        res = JOptionPane.showInputDialog(null, "¿Desea borrar el contenido de la tabla?[S=Sí/N=No]");
-        
-        if (res.length() > 0 && res.charAt(0) == 'S') {
-            modelo.setRowCount(0);
-        }
-        
-        calculaTotalVenta();
+        reiniciarVenta(1);                
         
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
@@ -304,6 +351,37 @@ public class VentasView extends javax.swing.JFrame {
         
         calculaTotalVenta();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnCobrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCobrarActionPerformed
+        // TODO add your handling code here:
+        DefaultTableModel modelo = (DefaultTableModel) tableItems.getModel();
+        int nRow = modelo.getRowCount(), cantidad;
+        Producto p = null;
+        List<ItemVentas> items = new ArrayList<>();
+        ItemVentas iv = null;
+        
+        
+        int i = modelo.getRowCount();
+        
+        if(i>0){
+            
+            for (int x = 0 ; x < nRow ; x++){
+                p = (Producto)modelo.getValueAt(x, 0);
+                cantidad = (int)modelo.getValueAt(x, 2);
+                iv = new ItemVentas(p, cantidad);
+                items.add(iv);
+            }
+            
+            
+            if(Ventas.generaVenta(textTotal.getText(), items)){
+                JOptionPane.showMessageDialog(null, "Venta generada");
+                
+                reiniciarVenta(0);
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "No se ha agregado ningun producto");
+        }        
+    }//GEN-LAST:event_btnCobrarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -360,4 +438,24 @@ public class VentasView extends javax.swing.JFrame {
     public javax.swing.JTextField textBuscar;
     private javax.swing.JFormattedTextField textTotal;
     // End of variables declaration//GEN-END:variables
+
+    private void reiniciarVenta(int confirm) {
+        DefaultTableModel modelo = (DefaultTableModel) tableItems.getModel();
+        
+        int i = modelo.getRowCount();
+        
+        if(confirm == 1){
+            if(i>0){
+                int dialogResult = JOptionPane.showConfirmDialog (null, "¿Desea eliminar los registros de la tabla?");
+                
+                if(dialogResult == JOptionPane.YES_OPTION){
+                    modelo.setRowCount(0);
+                }                        
+            }
+        }else
+            modelo.setRowCount(0);
+        
+        calculaTotalVenta();
+    }
+
 }
