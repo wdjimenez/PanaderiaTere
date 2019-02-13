@@ -164,5 +164,25 @@ public class Producto {
             return false;
         }
     }
+    
+    public static int getRealStock(int idProd){
+        int stock = 0;
+        
+        conn = DataBase.getConnection();
+        
+        try{
+            PreparedStatement ps = conn.prepareStatement("SELECT stock FROM productos WHERE id = ?");
+            ps.setInt(1, idProd);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                stock = rs.getInt("stock");         
+            }
+//            conn.close();
+        }catch(SQLException ex){
+            Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return stock;
+    }
 
 }

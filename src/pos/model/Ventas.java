@@ -23,10 +23,12 @@ public class Ventas {
     
     public static boolean generaVenta(String total, List<ItemVentas> items){
         ResultSet rs = null;
-        PreparedStatement pstmt1 = null, pstmt2 = null;
-        int ventaId;
-        String sqlVenta = "INSERT INTO ventas(total) VALUES(?)";
+        PreparedStatement pstmt1 = null, pstmt2 = null, pstmt3 = null;
+        int ventaId, stock;
+        String sqlVenta = "INSERT INTO ventas(fecha, total) VALUES(julianday('now'),?)";
         String sqlItem = "INSERT INTO productosventa(id_venta, id_producto, cantidad, precio, importe, descuento) VALUES(?,?,?,?,?,0.00)";
+        String sqlStock = "SELECT stock FROM productos WHERE id = ?";
+        String sqlUpdStock = "UPDATE productos SET stock = ? WHERE id = ?";
         
         try{
             conn = DataBase.getConnection();
@@ -54,7 +56,32 @@ public class Ventas {
             }
             
             //Insertamos las posiciones
-            for(ItemVentas item : items){
+            for(ItemVentas item : items){                
+                
+                //Recuperamos el stock actual del producto
+                pstmt3 = conn.prepareStatement(sqlStock);
+                pstmt3.setInt(1, item.getProd().getId());
+                
+                rs  = pstmt3.executeQuery();
+                stock = 0;                
+                while (rs.next()) {
+                    stock = rs.getInt("stock");                    
+                }
+                
+                stock = stock - item.getCantidad();
+                if (stock < 0) {
+                    conn.rollback();
+//                    conn.close();
+                    return false;
+                }                
+                
+                //Consumimos el stock
+                pstmt3 = conn.prepareStatement(sqlUpdStock);
+                pstmt3.setInt(1, stock);
+                pstmt3.setInt(2, item.getProd().getId());
+                pstmt3.executeUpdate();
+                
+                
                 pstmt2 = conn.prepareStatement(sqlItem);
                 pstmt2.setInt(rowAffected, rowAffected);
                 
@@ -68,7 +95,6 @@ public class Ventas {
                 
                 if(rowAffected != 1){//No se agrego el producto
                     conn.rollback();
-                    conn.close();
                     return false;
                 }
                     
@@ -97,9 +123,9 @@ public class Ventas {
                     pstmt1.close();
                 }
 
-                if (conn != null) {
-                    conn.close();
-                }
+//                if (conn != null) {
+//                    conn.close();
+//                }
                 
             } catch (SQLException e3) {
                 System.out.println(e3.getMessage());
