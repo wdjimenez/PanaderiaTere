@@ -184,5 +184,38 @@ public class Producto {
         
         return stock;
     }
+    
+    public static boolean addStock(int idProd, int cantidad){
+        String sqlProdStock = "INSERT INTO prod_stock(idProd, cantidad, fecha) VALUES(?, ?, julianday('now'))";
+        String sqlUpdStock = "UPDATE productos SET stock = ? WHERE id = ?";
+        int newStock = 0;
+        conn = DataBase.getConnection();
+        
+        try{
+            conn.setAutoCommit(false);
+            
+            PreparedStatement ps = conn.prepareStatement(sqlProdStock);
+            ps.setInt(1, idProd);
+            ps.setInt(2, cantidad);
+            
+            ps.execute();
+            
+            newStock = getRealStock(idProd) + cantidad;
+            
+            ps = conn.prepareStatement(sqlUpdStock);
+            ps.setInt(1, newStock);
+            ps.setInt(2, idProd);
+            
+            ps.execute();
+            
+            conn.commit();
+            
+        }catch(SQLException ex){
+            Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+                       
+        return true;
+    }
 
 }
