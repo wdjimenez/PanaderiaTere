@@ -217,5 +217,25 @@ public class Producto {
                        
         return true;
     }
-
+    
+    public static List<Producto> repStock() {
+        conn = DataBase.getConnection();
+        List<Producto> productos = new ArrayList<>();
+        try {
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM productos ORDER BY nombre");
+            while (rs.next()) {
+                Producto producto = new Producto();
+                producto.setId(rs.getInt("id"));
+                producto.setNombre(rs.getString("nombre"));
+                producto.setPrecio(rs.getInt("precio"));
+                producto.setStock(rs.getInt("stock"));
+                productos.add(producto);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return productos;
+    }    
+            
 }
