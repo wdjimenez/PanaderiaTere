@@ -395,7 +395,29 @@ public class VentasView extends javax.swing.JFrame {
             
             
             if(Ventas.generaVenta(textTotal.getText(), items)){
-                JOptionPane.showMessageDialog(null, "Venta generada");
+                boolean flag;
+                double cambio;
+                do{
+                    flag = true;
+                    try{
+                        float efectivo = Float.parseFloat(JOptionPane.showInputDialog(this, "Efectivo"));
+                                                                        
+                        cambio = efectivo - (Double)textTotal.getValue();
+                        
+                        if(cambio < 0){
+                            JOptionPane.showMessageDialog(this, "El efectivo es menor al monto total");
+                            flag = false;
+                        }else{
+                            JOptionPane.showMessageDialog(this, "Cambio $" + cambio);
+                        }
+                        
+                    }catch(NumberFormatException e){
+                        flag = false;
+                    }
+                    
+                }while(!flag);
+                
+                //JOptionPane.showMessageDialog(null, "Venta generada");
                 
                 reiniciarVenta(0);
             }
