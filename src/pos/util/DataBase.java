@@ -33,7 +33,7 @@ public class DataBase {
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS productos(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, nombre TEXT NOT NULL, precio REAL, stock INTEGER);");
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS ventas(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, fecha REAL, total REAL);");
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS productosventa(id_venta INTEGER, id_producto INTEGER, cantidad REAL, precio REAL, importe REAL, descuento REAL, FOREIGN KEY(id_venta) REFERENCES ventas(id), FOREIGN KEY(id_producto) REFERENCES productos(id));");
-                statement.executeUpdate("CREATE TABLE IF NOT EXISTS prod_stock(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, idProd INTEGER NOT NULL, fecha REAL NOT NULL, cantidad INTEGER NOT NULL, FOREIGN KEY(idProd) REFERENCES productos(id);"); 
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS prod_stock(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, idProd INTEGER NOT NULL, fecha REAL NOT NULL, cantidad INTEGER NOT NULL, FOREIGN KEY(idProd) REFERENCES productos(id));"); 
                 statement.executeUpdate("INSERT INTO usuarios (user,pass) VALUES ('Admin','PASSWORD');"); // <- Falta encriptar
 
                 statement.executeUpdate("INSERT INTO productos (nombre,precio,stock) VALUES ('Concha',10.00,20);");
