@@ -6,8 +6,10 @@
 package pos.view;
 
 import com.mxrck.autocompleter.TextAutoCompleter;
+import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import pos.model.Producto;
@@ -21,6 +23,11 @@ import pos.model.Ventas;
 public class VentasView extends javax.swing.JFrame {
 
     private TextAutoCompleter ac;
+    
+    JButton []arrPanes = new JButton[5];//arreglo de botones
+    
+    List<Producto> masvendidos;
+    
     /**
      * Creates new form PanaderiaTere
      */
@@ -28,7 +35,7 @@ public class VentasView extends javax.swing.JFrame {
         initComponents();
         initAutoCompleter();
         initProductsTable();
-        
+        initPanelBotones();
         calculaTotalVenta();
     }
     
@@ -88,6 +95,8 @@ public class VentasView extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         textTotal = new javax.swing.JFormattedTextField();
         jButton1 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        panelPanes = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -164,6 +173,8 @@ public class VentasView extends javax.swing.JFrame {
             }
         });
 
+        jLabel2.setText("Producto");
+
         jMenu2.setText("Productos");
 
         jMenuItem1.setText("Nuevo");
@@ -182,7 +193,7 @@ public class VentasView extends javax.swing.JFrame {
         jMenu2.add(jMenuItem3);
         jMenu2.add(jSeparator1);
 
-        jMenuItem7.setText("Stock");
+        jMenuItem7.setText("Entrada de mercancias");
         jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem7ActionPerformed(evt);
@@ -228,42 +239,44 @@ public class VentasView extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 685, Short.MAX_VALUE)
-                    .addComponent(textBuscar, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 889, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jButton1)
-                        .addGap(99, 99, 99)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel1)
                         .addGap(18, 18, 18)
                         .addComponent(textTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(139, 139, 139)
                         .addComponent(btnLimpiar)
                         .addGap(31, 31, 31)
-                        .addComponent(btnCobrar)))
+                        .addComponent(btnCobrar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(18, 18, 18)
+                        .addComponent(textBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(panelPanes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(textBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(16, 16, 16)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(textBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 401, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnCobrar)
-                            .addComponent(btnLimpiar))
-                        .addGap(31, 31, 31))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel1)
-                                .addComponent(textTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jButton1))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addComponent(panelPanes, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 541, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCobrar)
+                    .addComponent(btnLimpiar)
+                    .addComponent(jLabel1)
+                    .addComponent(textTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1))
+                .addGap(31, 31, 31))
         );
 
         pack();
@@ -275,72 +288,14 @@ public class VentasView extends javax.swing.JFrame {
 
     private void textBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textBuscarActionPerformed
         // TODO add your handling code here:
-        Producto pNuevo, pOld;
-        ItemVentas item;
-        int nPanes = 0, consumo = 0, index = -1, stock;
+        Producto pNuevo;
         
         pNuevo = (Producto)ac.getItemSelected();
         
         if (pNuevo != null) {
-       
-            try{
-                nPanes = Integer.parseInt(JOptionPane.showInputDialog(null, "¿Cuántos panes desea agregar?"));
-            }catch(NumberFormatException e){
-                JOptionPane.showMessageDialog(null, "No se introdujo ningún número");       
-                System.out.println(e.getMessage());
-                
-                return;
-            }      
             
-            DefaultTableModel modelo = (DefaultTableModel) tableItems.getModel();
-            
-            //Verificamos que haya Stock disponible
-            int nRow = modelo.getRowCount();
-            
-            consumo = nPanes;
-            for (int i = 0 ; i < nRow ; i++){
-                pOld = (Producto)modelo.getValueAt(i,0);
-                
-                System.out.println("Producto anterior " + pOld.getId() + " " + pOld.getNombre());
-                System.out.println("Producto nuevo " + pNuevo.getId() + " " + pNuevo.getNombre());
-                if (pOld.getId() == pNuevo.getId()){//Se trata del mismo producto, incrementamos el stock
-                    index = i;
-                    consumo += (int)modelo.getValueAt(i,2);
-//                    modelo.setValueAt(consumo, nRow, 2);
-                }
-            }
-            
-            System.out.println("Consumo total " + consumo);
-            System.out.println("Indice " + index);
-            
-            
-            //Verificamos que haya suficiente consumo
-            stock = Producto.getRealStock(pNuevo.getId());
-            
-            System.out.println("Stock real " + stock);
-            
-            if (stock < consumo) {
-                JOptionPane.showMessageDialog(null, "No hay suficiente stock de este producto");       
-                return;
-            }
-            
-            if(index >= 0){//Actualizamos un elemento ya existente
-                
-                modelo.setValueAt(consumo, index, 2);
-                
-                modelo.setValueAt(consumo * pNuevo.getPrecio(), index, 3);
-                
-            }else{//Nuevo elemento                 
-                       
-                item = new ItemVentas(pNuevo, consumo);
-
-                modelo.addRow(new Object[]{
-                     item.getProd(),
-                     item.getPrecio(),
-                     item.getCantidad(),
-                     item.getImporte()           
-                }); 
-            }
+            agregarProductoVenta(pNuevo);
+                   
         }
         
         calculaTotalVenta();
@@ -420,6 +375,8 @@ public class VentasView extends javax.swing.JFrame {
                 //JOptionPane.showMessageDialog(null, "Venta generada");
                 
                 reiniciarVenta(0);
+                initPanelBotones();
+                
             }
         }else{
             JOptionPane.showMessageDialog(null, "No se ha agregado ningun producto");
@@ -484,6 +441,7 @@ public class VentasView extends javax.swing.JFrame {
     public javax.swing.JButton btnLimpiar;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
@@ -497,6 +455,7 @@ public class VentasView extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPanel panelPanes;
     public javax.swing.JTable tableItems;
     public javax.swing.JTextField textBuscar;
     private javax.swing.JFormattedTextField textTotal;
@@ -519,6 +478,102 @@ public class VentasView extends javax.swing.JFrame {
             modelo.setRowCount(0);
         
         calculaTotalVenta();
+    }
+
+    private void initPanelBotones() {
+        Producto p;
+        masvendidos = Producto.bestSelled();
+        panelPanes.removeAll();
+        
+        int size = masvendidos.size();
+        
+        for(int i = 0; i < arrPanes.length && i < size ; i++){//ciclo para crear, añadir, establecer propiedades a los botones
+            
+            p = masvendidos.get(i);
+            arrPanes[i] = new JButton(p.getNombre());
+            panelPanes.add(arrPanes[i]);
+            arrPanes[i].setMargin(new Insets(5, 15, 5, 15));
+            
+            arrPanes[i].addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    for(int i = 0; i < arrPanes.length ; i++){
+                        System.out.println("indice " + i);
+                        if (arrPanes[i] == evt.getSource()){
+                            agregarProductoVenta(masvendidos.get(i));                           
+                            calculaTotalVenta();
+                            break;
+                        }
+                    }
+                    
+                }
+            });            
+        }//fin ciclo
+    }
+
+    private void agregarProductoVenta(Producto prod) {
+        Producto pOld;        
+        ItemVentas item;
+        int nPanes = 0, consumo = 0, index = -1, stock;
+        
+        
+        try{
+            nPanes = Integer.parseInt(JOptionPane.showInputDialog(null, "¿Cuántos panes desea agregar?"));
+        }catch(NumberFormatException e){
+            JOptionPane.showMessageDialog(null, "No se introdujo ningún número");       
+            System.out.println(e.getMessage());
+
+            return;
+        }      
+
+        DefaultTableModel modelo = (DefaultTableModel) tableItems.getModel();
+
+        //Verificamos que haya Stock disponible
+        int nRow = modelo.getRowCount();
+
+        consumo = nPanes;
+        for (int i = 0 ; i < nRow ; i++){
+            pOld = (Producto)modelo.getValueAt(i,0);
+
+            System.out.println("Producto anterior " + pOld.getId() + " " + pOld.getNombre());
+            System.out.println("Producto nuevo " + prod.getId() + " " + prod.getNombre());
+            if (pOld.getId() == prod.getId()){//Se trata del mismo producto, incrementamos el stock
+                index = i;
+                consumo += (int)modelo.getValueAt(i,2);
+//                    modelo.setValueAt(consumo, nRow, 2);
+            }
+        }
+
+        System.out.println("Consumo total " + consumo);
+        System.out.println("Indice " + index);
+
+
+        //Verificamos que haya suficiente consumo
+        stock = Producto.getRealStock(prod.getId());
+
+        System.out.println("Stock real " + stock);
+
+        if (stock < consumo) {
+            JOptionPane.showMessageDialog(null, "No hay suficiente stock de este producto");       
+            return;
+        }
+
+        if(index >= 0){//Actualizamos un elemento ya existente
+
+            modelo.setValueAt(consumo, index, 2);
+
+            modelo.setValueAt(consumo * prod.getPrecio(), index, 3);
+
+        }else{//Nuevo elemento                 
+
+            item = new ItemVentas(prod, consumo);
+
+            modelo.addRow(new Object[]{
+                 item.getProd(),
+                 item.getPrecio(),
+                 item.getCantidad(),
+                 item.getImporte()           
+            }); 
+        }
     }
 
 }

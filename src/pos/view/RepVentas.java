@@ -82,7 +82,7 @@ public class RepVentas extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Fecha", "Hora", "Venta", "Producto", "Cantidad", "Precio", "Importe"
+                "Fecha", "Hora", "Nota", "Producto", "Cantidad", "Precio", "Importe"
             }
         ) {
             Class[] types = new Class [] {

@@ -7,6 +7,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -237,5 +240,36 @@ public class Producto {
         }
         return productos;
     }    
+    
+    public static List<Producto> bestSelled(){
+        conn = DataBase.getConnection();
+        
+//        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");        
+        
+        LocalDate today = LocalDate.now();
+        LocalDate aMonthAgo = today.minusMonths(1);
+                        
+        List<Producto> productos = new ArrayList<>();
+        try {
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery("select productosventa.id_producto, productos.nombre, productos.precio, sum(productosventa.cantidad) FROM " + 
+                            " ventas inner join productosventa ON ventas.id = productosventa.id_venta " + 
+                            " inner join productos on productosventa.id_producto = productos.id " +
+                            "WHERE date(ventas.fecha,'localtime') BETWEEN '" + aMonthAgo.format(formatter) + "' AND '" + today.format(formatter)  + 
+                            "' GROUP BY id_producto ORDER BY SUM(cantidad) DESC LIMIT 5" );
+            while (rs.next()) {
+                Producto producto = new Producto();
+                producto.setId(rs.getInt("id_producto"));
+                producto.setNombre(rs.getString("nombre"));
+                producto.setPrecio(rs.getInt("precio"));
+//                producto.setStock(rs.getInt("stock"));
+                productos.add(producto);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return productos;
+    }
             
 }

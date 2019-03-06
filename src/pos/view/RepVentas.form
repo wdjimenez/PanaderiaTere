@@ -81,7 +81,7 @@
               <Table columnCount="7" rowCount="0">
                 <Column editable="false" title="Fecha" type="java.lang.String"/>
                 <Column editable="false" title="Hora" type="java.lang.String"/>
-                <Column editable="false" title="Venta" type="java.lang.String"/>
+                <Column editable="false" title="Nota" type="java.lang.String"/>
                 <Column editable="false" title="Producto" type="java.lang.String"/>
                 <Column editable="false" title="Cantidad" type="java.lang.Integer"/>
                 <Column editable="false" title="Precio" type="java.lang.Float"/>
