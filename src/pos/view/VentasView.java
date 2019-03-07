@@ -6,7 +6,11 @@
 package pos.view;
 
 import com.mxrck.autocompleter.TextAutoCompleter;
+import java.awt.Dimension;
 import java.awt.Insets;
+import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JButton;
@@ -36,7 +40,10 @@ public class VentasView extends javax.swing.JFrame {
         initAutoCompleter();
         initProductsTable();
         initPanelBotones();
-        calculaTotalVenta();
+        calculaTotalVenta();        
+        
+        setLocationRelativeTo(null);
+    
     }
     
     private void initAutoCompleter(){
@@ -44,6 +51,15 @@ public class VentasView extends javax.swing.JFrame {
         ac.setMode(0);
         Producto.all().forEach((producto) -> {
             ac.addItem(producto);
+        });
+    }
+    
+    public void refreshAutoCompleter(){
+        this.ac.removeAllItems();
+        
+        Producto.all().forEach((producto) -> {
+            System.out.println("Producto " + producto.getNombre() + " Precio " + producto.getPrecio());
+            this.ac.addItem(producto);
         });
     }
 
@@ -186,6 +202,11 @@ public class VentasView extends javax.swing.JFrame {
         jMenu2.add(jMenuItem1);
 
         jMenuItem2.setText("Editar");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem2);
 
         jMenuItem3.setText("Eliminar");
@@ -284,6 +305,23 @@ public class VentasView extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
+        ProductosView vProd = new ProductosView(this, true);
+        vProd.setVisible(true);
+        
+        vProd.addWindowListener(new WindowAdapter() {
+            public void windowClosed(WindowEvent e){
+                System.out.println("jdialog window closed event received Close 1");
+                
+                refreshAutoCompleter();
+                
+            }
+
+            public void windowClosing(WindowEvent e){
+                System.out.println("jdialog window closing event received Close 2");
+            }
+        });
+        
+        
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void textBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textBuscarActionPerformed
@@ -385,7 +423,7 @@ public class VentasView extends javax.swing.JFrame {
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
         // TODO add your handling code here:
-        Stock stock = new Stock( );
+        Stock stock = new Stock(this, true);
         stock.setVisible(true);
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
@@ -400,6 +438,25 @@ public class VentasView extends javax.swing.JFrame {
         RepVentas rep = new RepVentas();
         rep.setVisible(true);
     }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        ActProducto actualizar = new ActProducto(this, true);
+        actualizar.setVisible(true);
+        
+        actualizar.addWindowListener(new WindowAdapter() {
+            public void windowClosed(WindowEvent e){
+                System.out.println("jdialog window closed event received Close 1");
+                
+                refreshAutoCompleter();
+                
+            }
+
+            public void windowClosing(WindowEvent e){
+                System.out.println("jdialog window closing event received Close 2");
+            }
+        });
+        
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     /**
      * @param args the command line arguments

@@ -38,6 +38,8 @@ public class RepVentas extends javax.swing.JFrame {
         SimpleDateFormat sf = new SimpleDateFormat("dd/MM/yyyy");
         
         textFecha.setText(sf.format(d));
+        
+        setLocationRelativeTo(null);
     }
     
     

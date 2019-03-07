@@ -33,15 +33,25 @@ public class Producto {
     private String nombre;
     private float precio;
     private int stock;
+    private int inactivo;
+
+    public int getInactivo() {
+        return inactivo;
+    }
+
+    public void setInactivo(int inactivo) {
+        this.inactivo = inactivo;
+    }
 
     public Producto() {
     }
 
-    public Producto(int id, String nombre, float precio, int stock) {
+    public Producto(int id, String nombre, float precio, int stock, int inactivo) {
         this.id = id;
         this.nombre = nombre;
         this.precio = precio;
         this.stock = stock;
+        this.inactivo = inactivo;
     }
 
     public int getId() {
@@ -91,8 +101,9 @@ public class Producto {
                 producto = new Producto();
                 producto.setId(rs.getInt("id"));
                 producto.setNombre(rs.getString("nombre"));
-                producto.setPrecio(rs.getInt("precio"));
+                producto.setPrecio(rs.getFloat("precio"));
                 producto.setStock(rs.getInt("stock"));
+                producto.setInactivo(rs.getInt("inactivo"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);
@@ -105,13 +116,35 @@ public class Producto {
         List<Producto> productos = new ArrayList<>();
         try {
             Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM productos");
+            ResultSet rs = st.executeQuery("SELECT * FROM productos WHERE inactivo = 0");
             while (rs.next()) {
                 Producto producto = new Producto();
                 producto.setId(rs.getInt("id"));
                 producto.setNombre(rs.getString("nombre"));
-                producto.setPrecio(rs.getInt("precio"));
+                producto.setPrecio(rs.getFloat("precio"));
                 producto.setStock(rs.getInt("stock"));
+                producto.setInactivo(rs.getInt("inactivo"));
+                productos.add(producto);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return productos;
+    }
+    
+    public static List<Producto> allProd() {
+        conn = DataBase.getConnection();
+        List<Producto> productos = new ArrayList<>();
+        try {
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM productos ORDER BY nombre");
+            while (rs.next()) {
+                Producto producto = new Producto();
+                producto.setId(rs.getInt("id"));
+                producto.setNombre(rs.getString("nombre"));
+                producto.setPrecio(rs.getFloat("precio"));
+                producto.setStock(rs.getInt("stock"));
+                producto.setInactivo(rs.getInt("inactivo"));
                 productos.add(producto);
             }
         } catch (SQLException ex) {
@@ -123,15 +156,19 @@ public class Producto {
     public Boolean create() {
         conn = DataBase.getConnection();
         try {
+            conn.setAutoCommit(false);
+            
             PreparedStatement ps = conn.prepareStatement("INSERT INTO productos (nombre,precio,stock) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, getNombre());
+            ps.setString(1, getNombre());            
             ps.setFloat(2, getPrecio());
             ps.setInt(3, getStock());
-            ps.execute();
+            ps.executeUpdate();
             ResultSet generatedKeys = ps.getGeneratedKeys();
             while (generatedKeys.next()) {
                 setId((int) generatedKeys.getLong(1));
             }
+            
+            conn.commit();
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);
@@ -142,12 +179,19 @@ public class Producto {
     public Boolean update() {
         conn = DataBase.getConnection();
         try {
-            PreparedStatement ps = conn.prepareStatement("UPDATE productos SET nombre = ?, precio = ?, stock = ? WHERE id = ?");
+            
+            conn.setAutoCommit(false);
+            
+            PreparedStatement ps = conn.prepareStatement("UPDATE productos SET nombre = ?, precio = ?, stock = ?, inactivo = ? WHERE id = ?");                        
+            
             ps.setString(1, getNombre());
             ps.setFloat(2, getPrecio());
             ps.setInt(3, getStock());
-            ps.setInt(4, getId());
+            ps.setInt(4, getInactivo());
+            ps.setInt(5, getId());
             ps.execute();
+            
+            conn.commit();
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);
@@ -157,10 +201,14 @@ public class Producto {
 
     public static boolean delete(int id) {
         conn = DataBase.getConnection();
-        try {
+        try {            
+            conn.setAutoCommit(false);
+            
             PreparedStatement ps = conn.prepareStatement("DELETE FROM productos WHERE id = ?");
             ps.setInt(1, id);
             ps.execute();
+            
+            conn.commit();
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);
@@ -226,12 +274,12 @@ public class Producto {
         List<Producto> productos = new ArrayList<>();
         try {
             Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM productos ORDER BY nombre");
+            ResultSet rs = st.executeQuery("SELECT * FROM productos WHERE inactivo = 0 ORDER BY nombre");
             while (rs.next()) {
                 Producto producto = new Producto();
                 producto.setId(rs.getInt("id"));
                 producto.setNombre(rs.getString("nombre"));
-                producto.setPrecio(rs.getInt("precio"));
+                producto.setPrecio(rs.getFloat("precio"));
                 producto.setStock(rs.getInt("stock"));
                 productos.add(producto);
             }
@@ -262,7 +310,7 @@ public class Producto {
                 Producto producto = new Producto();
                 producto.setId(rs.getInt("id_producto"));
                 producto.setNombre(rs.getString("nombre"));
-                producto.setPrecio(rs.getInt("precio"));
+                producto.setPrecio(rs.getFloat("precio"));
 //                producto.setStock(rs.getInt("stock"));
                 productos.add(producto);
             }
@@ -270,6 +318,31 @@ public class Producto {
             Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);
         }
         return productos;
+    }
+    
+    public static boolean saveLogPrice(int idProd, float precio_old, float precio_new){
+        String sqlProdPrecio = "INSERT INTO prod_precio(idProd, fecha, precio_old, precio_new) VALUES(?, julianday('now'), ?, ?)";
+
+        conn = DataBase.getConnection();
+        
+        try{
+            conn.setAutoCommit(false);
+            
+            PreparedStatement ps = conn.prepareStatement(sqlProdPrecio);
+            ps.setInt(1, idProd);
+            ps.setFloat(2, precio_old);
+            ps.setFloat(3, precio_new);
+            
+            ps.execute();     
+            
+            conn.commit();
+            
+        }catch(SQLException ex){
+            Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+                       
+        return true;
     }
             
 }
