@@ -29,6 +29,15 @@ public class Ventas {
     private int cantidad;
     private float precio;
     private float importe;
+    private float descuento;
+
+    public float getDescuento() {
+        return descuento;
+    }
+
+    public void setDescuento(float descuento) {
+        this.descuento = descuento;
+    }
     
     private static Connection conn;
 
@@ -90,12 +99,12 @@ public class Ventas {
     
     
     
-    public static boolean generaVenta(String total, List<ItemVentas> items){
+    public static boolean generaVenta(float total, float descuento, List<ItemVentas> items){
         ResultSet rs = null;
         PreparedStatement pstmt1 = null, pstmt2 = null, pstmt3 = null;
         int ventaId, stock;
-        String sqlVenta = "INSERT INTO ventas(fecha, total) VALUES(julianday('now'),?)";
-        String sqlItem = "INSERT INTO productosventa(id_venta, id_producto, cantidad, precio, importe, descuento) VALUES(?,?,?,?,?,0.00)";
+        String sqlVenta = "INSERT INTO ventas(fecha, total, descuento) VALUES(julianday('now'),?, ?)";
+        String sqlItem = "INSERT INTO productosventa(id_venta, id_producto, cantidad, precio, importe) VALUES(?,?,?,?,?)";
         String sqlStock = "SELECT stock FROM productos WHERE id = ?";
         String sqlUpdStock = "UPDATE productos SET stock = ? WHERE id = ?";
         
@@ -110,7 +119,9 @@ public class Ventas {
             pstmt1 = conn.prepareStatement(sqlVenta,
                     Statement.RETURN_GENERATED_KEYS);
  
-            pstmt1.setString(1, total);
+            pstmt1.setFloat(1, total);
+            pstmt1.setFloat(2, descuento);
+            
             
             int rowAffected = pstmt1.executeUpdate();
             
@@ -206,7 +217,7 @@ public class Ventas {
         
     }
     
-    public static List<Ventas> repVentas(String fecha){
+    public static List<Ventas> repVentas(String from, String to){
         conn = DataBase.getConnection();
         List<Ventas> ventas = new ArrayList<>();
         String consulta = "SELECT date(ventas.fecha,'localtime') as fecha, time(ventas.fecha, 'localtime') as hora, " +
@@ -216,10 +227,10 @@ public class Ventas {
 "						ON productosventa.id_venta = ventas.id " +
 "				   INNER JOIN productos " +
 "						ON productos.id = productosventa.id_producto " +
-"	   WHERE date(ventas.fecha,'localtime') = \"" + fecha + "\" " +
+"	   WHERE date(ventas.fecha,'localtime') BETWEEN \"" + from + "\" AND \"" + to + "\" " +
 "	ORDER BY date(ventas.fecha,'localtime'), time(ventas.fecha, 'localtime')";
         
-        System.out.println(consulta);
+//        System.out.println(consulta);
         try{
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(consulta);
@@ -231,7 +242,7 @@ public class Ventas {
                 v.setHora(rs.getString("hora"));
                 v.setImporte(rs.getFloat("importe"));
                 v.setNombre(rs.getString("nombre"));
-                v.setPrecio(rs.getFloat("precio"));
+                v.setPrecio(rs.getFloat("precio"));                
                 ventas.add(v);
             }
         }catch (SQLException ex) {
@@ -240,5 +251,39 @@ public class Ventas {
         
         return ventas;
         
-    }    
+    }   
+    
+    public static List<Ventas> getDiscounts(String from, String to){
+        conn = DataBase.getConnection();
+        List<Ventas> ventas = new ArrayList<>();
+        String consulta = "SELECT date(ventas.fecha,'localtime') as fecha, time(ventas.fecha, 'localtime') as hora, " +
+"	   ventas.id as venta, ventas.descuento " +
+"	   FROM ventas " +                
+"	   WHERE date(ventas.fecha,'localtime') BETWEEN \"" + from + "\" AND \"" + to + "\" and" +
+"                ventas.descuento > 0 "                +
+"	ORDER BY date(ventas.fecha,'localtime'), time(ventas.fecha, 'localtime')";
+        
+//        System.out.println(consulta);
+        try{
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(consulta);
+            while (rs.next()) {
+                Ventas v = new Ventas();
+                v.setIdVenta(rs.getInt("venta"));                
+//                v.setCantidad(rs.getInt("cantidad"));
+                v.setFecha(rs.getString("fecha"));
+                v.setHora(rs.getString("hora"));
+//                v.setImporte(rs.getFloat("importe"));
+//                v.setNombre(rs.getString("nombre"));
+//                v.setPrecio(rs.getFloat("precio"));
+                v.setDescuento(rs.getFloat("descuento"));
+                ventas.add(v);
+            }
+        }catch (SQLException ex) {
+            Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return ventas;
+        
+    }   
 }

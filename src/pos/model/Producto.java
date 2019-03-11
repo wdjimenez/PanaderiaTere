@@ -116,7 +116,7 @@ public class Producto {
         List<Producto> productos = new ArrayList<>();
         try {
             Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM productos WHERE inactivo = 0");
+            ResultSet rs = st.executeQuery("SELECT * FROM productos WHERE inactivo = 0 ORDER BY nombre");
             while (rs.next()) {
                 Producto producto = new Producto();
                 producto.setId(rs.getInt("id"));
