@@ -28,13 +28,23 @@ public class Usuario {
 
     private String user;
     private String pass;
+    private String salt;
+
+    public String getSalt() {
+        return salt;
+    }
 
     public Usuario() {
     }
 
-    public Usuario(String user, String pass) {
+    public Usuario(String user, String pass, String salt) {
         this.user = user;
         this.pass = pass;
+        this.salt = salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 
     public String getUser() {
@@ -64,6 +74,7 @@ public class Usuario {
                 usuario = new Usuario();
                 usuario.setUser(rs.getString("user"));
                 usuario.setPass(rs.getString("pass"));
+                usuario.setSalt(rs.getString("salt"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(Usuario.class.getName()).log(Level.SEVERE, null, ex);
@@ -74,9 +85,10 @@ public class Usuario {
     public Boolean update() {
         conn = DataBase.getConnection();
         try {
-            PreparedStatement ps = conn.prepareStatement("UPDATE usuarios SET pass = ? WHERE user = ?");
+            PreparedStatement ps = conn.prepareStatement("UPDATE usuarios SET pass = ?, salt = ? WHERE user = ?");
             ps.setString(1, getPass());
-            ps.setString(2, getUser());
+            ps.setString(2, getSalt());
+            ps.setString(3, getUser());
             ps.execute();
             return true;
         } catch (SQLException ex) {

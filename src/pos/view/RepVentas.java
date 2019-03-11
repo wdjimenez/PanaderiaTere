@@ -173,6 +173,11 @@ public class RepVentas extends javax.swing.JFrame {
 
         textFechaTo.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter()));
         textFechaTo.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        textFechaTo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFechaToActionPerformed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel2.setText("Rango de fechas");
@@ -241,6 +246,10 @@ public class RepVentas extends javax.swing.JFrame {
     private void textFechaFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFechaFromActionPerformed
         buscaVentas();
     }//GEN-LAST:event_textFechaFromActionPerformed
+
+    private void textFechaToActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFechaToActionPerformed
+        buscaVentas();
+    }//GEN-LAST:event_textFechaToActionPerformed
 
     private void buscaVentas() {
         Date from = (Date)textFechaFrom.getValue();

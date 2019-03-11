@@ -6,6 +6,7 @@
 package pos.view;
 
 import javax.swing.JOptionPane;
+import pos.model.PasswordUtils;
 import pos.model.Usuario;
 
 /**
@@ -40,8 +41,8 @@ public class ActPass extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Nueva contraseña");
-        setMinimumSize(new java.awt.Dimension(250, 170));
-        setPreferredSize(new java.awt.Dimension(250, 170));
+        setMinimumSize(new java.awt.Dimension(350, 170));
+        setPreferredSize(new java.awt.Dimension(350, 170));
         setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -108,8 +109,11 @@ public class ActPass extends javax.swing.JDialog {
             return;
         }
         
+        //Recuperamos la semilla
+        String salt = PasswordUtils.getSalt(30);        
+        String newPass = PasswordUtils.generateSecurePassword(myPass1, salt);
         
-        Usuario user = new Usuario("Admin", myPass1);
+        Usuario user = new Usuario("Admin", newPass, salt);
         if(user.update()){
             JOptionPane.showMessageDialog(this, "Se actualizó la contraseña correctamente");
             this.dispose();

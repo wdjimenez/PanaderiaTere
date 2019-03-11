@@ -28,6 +28,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
 import pos.model.Producto;
 import pos.model.ItemVentas;
+import pos.model.PasswordUtils;
 import pos.model.Usuario;
 import pos.model.Ventas;
 
@@ -825,7 +826,7 @@ public class VentasView extends javax.swing.JFrame {
 
     private boolean autenticarUsuario() { 
         JLabel label = new JLabel();
-        String masterpass = Usuario.find("Admin").getPass();
+        Usuario user = Usuario.find("Admin");
         JPasswordField pf = new JPasswordField();
         String myPass;
         int okCxl;
@@ -835,7 +836,7 @@ public class VentasView extends javax.swing.JFrame {
         do{      
             okCxl = JOptionPane.showConfirmDialog(null, pf, "Contraseña", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
             myPass = String.valueOf(pf.getPassword());
-            if (okCxl == JOptionPane.OK_OPTION && myPass.compareTo(masterpass) == 0){                
+            if (okCxl == JOptionPane.OK_OPTION && PasswordUtils.verifyUserPassword(myPass, user.getPass(), user.getSalt())){                
                 return true;
             }else if(okCxl == JOptionPane.CANCEL_OPTION)
                 return false;
