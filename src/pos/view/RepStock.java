@@ -40,6 +40,7 @@ public class RepStock extends javax.swing.JFrame {
         setTitle("Reporte de Existencia");
         setResizable(false);
 
+        tableStock.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         tableStock.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 

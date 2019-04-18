@@ -85,6 +85,8 @@ public class Usuario {
     public Boolean update() {
         conn = DataBase.getConnection();
         try {
+            conn.setAutoCommit(true);
+            
             PreparedStatement ps = conn.prepareStatement("UPDATE usuarios SET pass = ?, salt = ? WHERE user = ?");
             ps.setString(1, getPass());
             ps.setString(2, getSalt());
