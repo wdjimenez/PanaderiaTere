@@ -158,7 +158,7 @@ public class Producto {
         try {
             conn.setAutoCommit(false);
             
-            PreparedStatement ps = conn.prepareStatement("INSERT INTO productos (nombre,precio,stock) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO productos (nombre,precio,stock, inactivo) VALUES (?,?,?, 0)", Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, getNombre());            
             ps.setFloat(2, getPrecio());
             ps.setInt(3, getStock());

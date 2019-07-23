@@ -48,18 +48,22 @@ public class Stock extends javax.swing.JDialog {
         setTitle("Entrada de mercancias");
         setResizable(false);
 
+        comboProductos.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         comboProductos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboProductosActionPerformed(evt);
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel1.setText("Producto");
         jLabel1.setToolTipText("");
 
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel2.setText("Cantidad");
 
         textCantidad.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
+        textCantidad.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         textCantidad.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textCantidadActionPerformed(evt);
@@ -89,7 +93,7 @@ public class Stock extends javax.swing.JDialog {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(comboProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(textCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -185,7 +189,10 @@ public class Stock extends javax.swing.JDialog {
         
         if(Producto.addStock(item.getIdProd(), cantidad)){
             JOptionPane.showMessageDialog(null, "Se actualizo el stock del producto");
-            this.dispose();
+            //this.dispose();                        
+            
+            textCantidad.setValue(new Long("0"));
+            
         }else
             JOptionPane.showMessageDialog(null, "Se presento un problema al actualizar el producto");
         

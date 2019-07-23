@@ -32,22 +32,23 @@ public class DataBase {
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS usuarios(user TEXT NOT NULL UNIQUE, pass TEXT NOT NULL, salt TEXT NOT NULL, PRIMARY KEY(user));");
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS productos(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, nombre TEXT NOT NULL, precio REAL, stock INTEGER, inactivo INTEGER);");
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS ventas(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, fecha REAL NOT NULL, total REAL NOT NULL, descuento REAL NOT NULL);");
-                statement.executeUpdate("CREATE TABLE IF NOT EXISTS productosventa(id_venta INTEGER, id_producto INTEGER, cantidad REAL, precio REAL, importe REAL, descuento REAL, FOREIGN KEY(id_venta) REFERENCES ventas(id), FOREIGN KEY(id_producto) REFERENCES productos(id));");
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS productosventa(id_venta INTEGER, id_producto INTEGER, cantidad REAL, precio REAL, importe REAL, FOREIGN KEY(id_venta) REFERENCES ventas(id), FOREIGN KEY(id_producto) REFERENCES productos(id));");
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS prod_stock(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, idProd INTEGER NOT NULL, fecha REAL NOT NULL, cantidad INTEGER NOT NULL, FOREIGN KEY(idProd) REFERENCES productos(id));"); 
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS prod_precio(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, idProd INTEGER NOT NULL, fecha REAL NOT NULL, precio_old REAL NOT NULL, precio_new REAL NOT NULL, FOREIGN KEY(idProd) REFERENCES productos(id));"); 
                 
                 statement.executeUpdate("INSERT INTO usuarios (user,pass,salt) VALUES ('Admin','efY8UkOG2VOl7Px7WUIyDZm+O9kxFDGAIHYPUCzkFb4=', '4MdnVf2CXSTlsR7bdy6GZ9ePN0qBKi');"); //default password: password
 
-                statement.executeUpdate("INSERT INTO productos (nombre,precio,stock) VALUES ('Concha',10.00,20);");
-                statement.executeUpdate("INSERT INTO productos (nombre,precio,stock) VALUES ('Oreja',8.50,15);");
-                statement.executeUpdate("INSERT INTO productos (nombre,precio,stock) VALUES ('Polvorón',7.00,17);");
-                statement.executeUpdate("INSERT INTO productos (nombre,precio,stock) VALUES ('Panquecito',12.50,32);");
-                statement.executeUpdate("INSERT INTO productos (nombre,precio,stock) VALUES ('Campechana',9.00,25);");
-                statement.executeUpdate("INSERT INTO productos (nombre,precio,stock) VALUES ('Dona',8.50,14);");
-                statement.executeUpdate("INSERT INTO productos (nombre,precio,stock) VALUES ('Rebanada de mantequilla',21.00,29);");
-                statement.executeUpdate("INSERT INTO productos (nombre,precio,stock) VALUES ('Moño',6.00,42);");
-                statement.executeUpdate("INSERT INTO productos (nombre,precio,stock) VALUES ('Bisquet',9.50,13);");
-                statement.executeUpdate("INSERT INTO productos (nombre,precio,stock) VALUES ('Piedra',8.00,10);");
+                statement.executeUpdate("INSERT INTO productos (nombre,precio,stock, inactivo) VALUES ('Cazuela',10.00,0,0);");
+                statement.executeUpdate("INSERT INTO productos (nombre,precio,stock, inactivo) VALUES ('Capricho',8.50,0,0);");
+                statement.executeUpdate("INSERT INTO productos (nombre,precio,stock, inactivo) VALUES ('Conchita',7.00,0,0);");
+                statement.executeUpdate("INSERT INTO productos (nombre,precio,stock, inactivo) VALUES ('Conchotas',12.50,0,0);");
+                statement.executeUpdate("INSERT INTO productos (nombre,precio,stock, inactivo) VALUES ('Ajonjoli',9.00,0,0);");
+                statement.executeUpdate("INSERT INTO productos (nombre,precio,stock, inactivo) VALUES ('Chonguitos',8.50,0,0);");
+                statement.executeUpdate("INSERT INTO productos (nombre,precio,stock, inactivo) VALUES ('Cazuelitas',21.00,0,0);");
+                statement.executeUpdate("INSERT INTO productos (nombre,precio,stock, inactivo) VALUES ('Pelonas',6.00,0,0);");
+                statement.executeUpdate("INSERT INTO productos (nombre,precio,stock, inactivo) VALUES ('Panque',9.50,0,0);");
+                statement.executeUpdate("INSERT INTO productos (nombre,precio,stock, inactivo) VALUES ('Polka',8.00,0,0);");
+                statement.executeUpdate("INSERT INTO productos (nombre,precio,stock, inactivo) VALUES ('Marquezote',8.00,0,0);");
             } catch (SQLException e) {
                 // JOptionPane.showMessageDialog(null, e.toString(), "Error con el archivo", JOptionPane.ERROR_MESSAGE);
                 System.err.println("Error con el archivo");

@@ -48,16 +48,22 @@ public class ActProducto extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Modificar producto");
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel1.setText("Producto");
 
+        comboProductos.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         comboProductos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboProductosActionPerformed(evt);
             }
         });
 
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel2.setText("Nombre");
 
+        textNombre.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel3.setText("Precio");
 
         jButton1.setText("Actualizar");
@@ -67,9 +73,11 @@ public class ActProducto extends javax.swing.JDialog {
             }
         });
 
+        inactivo.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         inactivo.setText("Inactivo");
 
         textPrecio.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,###.00"))));
+        textPrecio.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -112,7 +120,7 @@ public class ActProducto extends javax.swing.JDialog {
                     .addComponent(textPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(inactivo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addContainerGap())
         );
@@ -160,8 +168,7 @@ public class ActProducto extends javax.swing.JDialog {
         if(item.getIdProd() ==  -1){ //falso producto
             JOptionPane.showMessageDialog(this, "Seleccione un producto de la lista para actualizar");
             return;
-        }
-        
+        }                
         if(inactivo.isSelected())
             inac = 1;
         
