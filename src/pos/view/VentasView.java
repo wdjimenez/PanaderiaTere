@@ -9,6 +9,7 @@ import com.mxrck.autocompleter.AutoCompleterCallback;
 import com.mxrck.autocompleter.TextAutoCompleter;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -76,6 +78,15 @@ public class VentasView extends javax.swing.JFrame {
         initAutoCompleter();
         initProductsTable();
         initPanelBotones();
+        
+        getContentPane().setBackground(new java.awt.Color(242,242,242));
+        
+        //Image img = icon.getImage("/pos/images/descuento.png") ;  
+        //Image newimg = img.getScaledInstance( NEW_WIDTH, NEW_HEIGHT,  java.awt.Image.SCALE_SMOOTH ) ;  
+        //icon = new ImageIcon( newimg );
+        //btn_adddesc.setIcon(new ImageIcon(((new ImageIcon("/pos/images/descuento.png")).getImage()).getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH)));
+        //btnRemover.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/images/descuento.png"))); // NOI18N
+        
         
         textTotal.setValue(new Double(0));
         textDescuento.setValue(new Double(0));
@@ -219,6 +230,7 @@ public class VentasView extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Panaderia Tere");
+        setBackground(new java.awt.Color(242, 242, 242));
         setResizable(false);
 
         textBuscar.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -248,6 +260,7 @@ public class VentasView extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tableItems);
 
+        btnCobrar.setBackground(new java.awt.Color(114, 151, 166));
         btnCobrar.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         btnCobrar.setText("Cobrar");
         btnCobrar.setToolTipText("Genera la venta");
@@ -257,6 +270,7 @@ public class VentasView extends javax.swing.JFrame {
             }
         });
 
+        btnLimpiar.setBackground(new java.awt.Color(114, 151, 166));
         btnLimpiar.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         btnLimpiar.setText("Reiniciar venta");
         btnLimpiar.setToolTipText("Borra la lista de productos");
@@ -279,6 +293,7 @@ public class VentasView extends javax.swing.JFrame {
             }
         });
 
+        btnRemover.setBackground(new java.awt.Color(114, 151, 166));
         btnRemover.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         btnRemover.setText("Remover producto");
         btnRemover.setToolTipText("Remueve el producto seleccionado");
@@ -298,6 +313,7 @@ public class VentasView extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel3.setText("Descuento");
 
+        btn_adddesc.setBackground(new java.awt.Color(114, 151, 166));
         btn_adddesc.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         btn_adddesc.setText("Agregar descuento");
         btn_adddesc.setToolTipText("Agregar descuento a la venta");
@@ -307,6 +323,7 @@ public class VentasView extends javax.swing.JFrame {
             }
         });
 
+        btn_remdesc.setBackground(new java.awt.Color(114, 151, 166));
         btn_remdesc.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         btn_remdesc.setText("Eliminar descuento");
         btn_remdesc.setToolTipText("Eliminar descuento de la venta");
@@ -411,16 +428,17 @@ public class VentasView extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(textBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
+                                .addGap(32, 32, 32)
                                 .addComponent(btnRemover)
                                 .addGap(18, 18, 18)
                                 .addComponent(btn_adddesc)
                                 .addGap(18, 18, 18)
                                 .addComponent(btn_remdesc)
-                                .addGap(453, 453, 453)
+                                .addGap(421, 421, 421)
                                 .addComponent(btnLimpiar)
                                 .addGap(31, 31, 31)
                                 .addComponent(btnCobrar)))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(0, 38, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -451,7 +469,7 @@ public class VentasView extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(textTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 86, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCobrar)
                     .addComponent(btnLimpiar)
@@ -574,11 +592,6 @@ public class VentasView extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_textTotalActionPerformed
 
-    private void btnRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverActionPerformed
-        removerProducto();
-        
-    }//GEN-LAST:event_btnRemoverActionPerformed
-
     private void btnCobrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCobrarActionPerformed
         
         cobrarVenta();        
@@ -676,6 +689,11 @@ public class VentasView extends javax.swing.JFrame {
         textDescuento.setValue(new Double(0));
         calculaTotalVenta();
     }//GEN-LAST:event_btn_remdescActionPerformed
+
+    private void btnRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverActionPerformed
+        removerProducto();
+
+    }//GEN-LAST:event_btnRemoverActionPerformed
 
     /**
      * @param args the command line arguments

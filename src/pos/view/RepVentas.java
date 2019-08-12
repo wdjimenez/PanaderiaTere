@@ -19,6 +19,9 @@ import java.text.DecimalFormat;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
 
 /**
  *
@@ -35,6 +38,8 @@ public class RepVentas extends javax.swing.JFrame {
     public RepVentas() {
         initComponents();          
         
+        getContentPane().setBackground(new java.awt.Color(242,242,242));
+        
         tableVentas.getColumnModel().getColumn(5).setCellRenderer((TableCellRenderer) new DecimalFormatRenderer());
         tableVentas.getColumnModel().getColumn(6).setCellRenderer((TableCellRenderer) new DecimalFormatRenderer());
         
@@ -48,7 +53,7 @@ public class RepVentas extends javax.swing.JFrame {
 //        
 //        textFechaTo.setText(sf.format(d));
         textFechaFrom.setValue(d);
-        textFechaTo.setValue(d);
+        textFechaTo.setValue(d);        
         
         setLocationRelativeTo(null);
     }
@@ -130,6 +135,7 @@ public class RepVentas extends javax.swing.JFrame {
             tableVentas.getColumnModel().getColumn(3).setMinWidth(10);
         }
 
+        jButton2.setBackground(new java.awt.Color(114, 151, 166));
         jButton2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jButton2.setText("Buscar");
         jButton2.addActionListener(new java.awt.event.ActionListener() {

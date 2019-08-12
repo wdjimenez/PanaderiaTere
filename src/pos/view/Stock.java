@@ -25,6 +25,9 @@ public class Stock extends javax.swing.JDialog {
         initComponents();
         llenarComboBox();
         
+        
+        getContentPane().setBackground(new java.awt.Color(242,242,242));
+        
         setLocationRelativeTo(null);
         
     }
@@ -70,6 +73,7 @@ public class Stock extends javax.swing.JDialog {
             }
         });
 
+        jButton1.setBackground(new java.awt.Color(114, 151, 166));
         jButton1.setText("Agregar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

@@ -21,6 +21,8 @@ public class RepStock extends javax.swing.JFrame {
         initComponents();
         llenarjTable();
         
+        getContentPane().setBackground(new java.awt.Color(242,242,242));
+        
         setLocationRelativeTo(null);
     }
 

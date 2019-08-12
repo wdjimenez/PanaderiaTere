@@ -24,6 +24,8 @@ public class ActProducto extends javax.swing.JDialog {
         initComponents();
         llenarComboBox();
         
+        getContentPane().setBackground(new java.awt.Color(242,242,242));
+        
         setLocationRelativeTo(null);
     }
 
@@ -66,6 +68,7 @@ public class ActProducto extends javax.swing.JDialog {
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel3.setText("Precio");
 
+        jButton1.setBackground(new java.awt.Color(114, 151, 166));
         jButton1.setText("Actualizar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
