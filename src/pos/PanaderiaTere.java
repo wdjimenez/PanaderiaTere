@@ -7,6 +7,7 @@ package pos;
  */
 import pos.util.Config;
 import pos.view.VentasView;
+import pos.view.PrincipalView;
 
 /**
  *
@@ -58,7 +59,8 @@ public class PanaderiaTere {
                 }
                 // Carga pantalla principal
                 if (inicio) {
-                    new VentasView().setVisible(true);
+                    //new VentasView().setVisible(true);
+                    new PrincipalView().setVisible(true);
                 }
             }
         });

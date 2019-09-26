@@ -29,9 +29,9 @@ public class DataBase {
                 Statement statement = connection.createStatement();
                 statement.setQueryTimeout(30);
 
-                statement.executeUpdate("CREATE TABLE IF NOT EXISTS usuarios(user TEXT NOT NULL UNIQUE, pass TEXT NOT NULL, salt TEXT NOT NULL, PRIMARY KEY(user));");
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS usuarios(user TEXT NOT NULL UNIQUE, pass TEXT NOT NULL, salt TEXT NOT NULL, nombre TEXT, apellido TEXT, admin INTEGER, PRIMARY KEY(user));");
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS productos(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, nombre TEXT NOT NULL, precio REAL, stock INTEGER, inactivo INTEGER);");
-                statement.executeUpdate("CREATE TABLE IF NOT EXISTS ventas(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, fecha REAL NOT NULL, total REAL NOT NULL, descuento REAL NOT NULL);");
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS ventas(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, fecha REAL NOT NULL, total REAL NOT NULL, descuento REAL NOT NULL, user INTEGER, FOREIGN KEY(user) REFERENCES usuarios(user),);");
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS productosventa(id_venta INTEGER, id_producto INTEGER, cantidad REAL, precio REAL, importe REAL, FOREIGN KEY(id_venta) REFERENCES ventas(id), FOREIGN KEY(id_producto) REFERENCES productos(id));");
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS prod_stock(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, idProd INTEGER NOT NULL, fecha REAL NOT NULL, cantidad INTEGER NOT NULL, FOREIGN KEY(idProd) REFERENCES productos(id));"); 
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS prod_precio(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, idProd INTEGER NOT NULL, fecha REAL NOT NULL, precio_old REAL NOT NULL, precio_new REAL NOT NULL, FOREIGN KEY(idProd) REFERENCES productos(id));"); 

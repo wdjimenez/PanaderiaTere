@@ -5,10 +5,12 @@
  */
 package pos.view;
 
+import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JOptionPane;
 import pos.model.Producto;
 import pos.model.ComboItem;
+import pos.util.Config;
 
 /**
  *
@@ -26,7 +28,8 @@ public class Stock extends javax.swing.JDialog {
         llenarComboBox();
         
         
-        getContentPane().setBackground(new java.awt.Color(242,242,242));
+        getContentPane().setBackground(Color.decode(Config.ColorContent));
+        jButton1.setBackground(Color.decode(Config.ColorElement));
         
         setLocationRelativeTo(null);
         

@@ -5,8 +5,10 @@
  */
 package pos.view;
 
+import java.awt.Color;
 import javax.swing.JOptionPane;
 import pos.model.Producto;
+import pos.util.Config;
 
 /**
  *
@@ -22,7 +24,8 @@ public class ProductosView extends javax.swing.JDialog {
         
         initComponents();
         
-        getContentPane().setBackground(new java.awt.Color(242,242,242));
+        getContentPane().setBackground(Color.decode(Config.ColorContent));
+        btnAceptar.setBackground(Color.decode(Config.ColorElement));
         
         setLocationRelativeTo(null);
         
@@ -61,6 +64,7 @@ public class ProductosView extends javax.swing.JDialog {
         textNombre.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
         btnAceptar.setBackground(new java.awt.Color(114, 151, 166));
+        btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/document.png"))); // NOI18N
         btnAceptar.setText("Crear");
         btnAceptar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

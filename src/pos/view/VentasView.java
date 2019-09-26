@@ -7,6 +7,7 @@ package pos.view;
 
 import com.mxrck.autocompleter.AutoCompleterCallback;
 import com.mxrck.autocompleter.TextAutoCompleter;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JButton;
@@ -36,11 +38,14 @@ import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
+import jiconfont.icons.font_awesome.FontAwesome;
 import pos.model.Producto;
 import pos.model.ItemVentas;
 import pos.model.PasswordUtils;
 import pos.model.Usuario;
 import pos.model.Ventas;
+import pos.util.Config;
+import pos.util.IconUtil;
 
 /**
  *
@@ -62,8 +67,13 @@ public class VentasView extends javax.swing.JFrame {
     private static final int CANTIDAD = 3;
     
     private Producto pan_selected;
+    
+    private Usuario sesion;
             
     private int estado; //EN espera de producto
+    
+//    private String colorContent = "#DFDCE3";
+//    private String colorElement = "#85AFC9"; //"#D2D904";
     
     
     JButton []arrPanes = new JButton[5];//arreglo de botones
@@ -73,19 +83,40 @@ public class VentasView extends javax.swing.JFrame {
     /**
      * Creates new form PanaderiaTere
      */
-    public VentasView() {
+    public VentasView(Usuario s) {
+        sesion = s;
+        
         initComponents();
         initAutoCompleter();
         initProductsTable();
         initPanelBotones();
         
-        getContentPane().setBackground(new java.awt.Color(242,242,242));
+        labelUsuario.setText(sesion.getNombre() + " " + sesion.getApellido());
         
-        //Image img = icon.getImage("/pos/images/descuento.png") ;  
-        //Image newimg = img.getScaledInstance( NEW_WIDTH, NEW_HEIGHT,  java.awt.Image.SCALE_SMOOTH ) ;  
-        //icon = new ImageIcon( newimg );
-        //btn_adddesc.setIcon(new ImageIcon(((new ImageIcon("/pos/images/descuento.png")).getImage()).getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH)));
-        //btnRemover.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/images/descuento.png"))); // NOI18N
+        //getContentPane().setBackground(new java.awt.Color(242,242,242));
+        getContentPane().setBackground(Color.decode(Config.ColorContent));
+        
+        if(!sesion.isAdmin()){
+            menuItemNuevo.setEnabled(false);
+            menuItemEditar.setEnabled(false);
+            menuItemEliminar.setEnabled(false);
+            menuItemRepVentas.setEnabled(false);
+            menuItemCUser.setEnabled(false);
+            menuItemModUser.setEnabled(false);
+        }
+        
+        panelPanes.setBackground(Color.decode(Config.ColorContent));
+        
+        btnRemover.setBackground(Color.decode(Config.ColorElement));
+        btnRemover.setForeground(Color.decode(Config.ColorText));
+        btn_adddesc.setBackground(Color.decode(Config.ColorElement));
+        btn_adddesc.setForeground(Color.decode(Config.ColorText));
+        btn_remdesc.setBackground(Color.decode(Config.ColorElement));
+        btn_remdesc.setForeground(Color.decode(Config.ColorText));
+        btnCobrar.setBackground(Color.decode(Config.ColorElement));
+        btnCobrar.setForeground(Color.decode(Config.ColorText));
+        btnLimpiar.setBackground(Color.decode(Config.ColorElement));
+        btnLimpiar.setForeground(Color.decode(Config.ColorText));
         
         
         textTotal.setValue(new Double(0));
@@ -97,6 +128,13 @@ public class VentasView extends javax.swing.JFrame {
         calculaTotalVenta();        
         
         setLocationRelativeTo(null);
+        
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                new PrincipalView().setVisible(true);
+            }
+        });
         
         
 //        //Acceso directo para Boton Cobrar
@@ -135,6 +173,7 @@ public class VentasView extends javax.swing.JFrame {
 //        btnLimpiar.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F6"), "Reiniciar");
 //        
 //        btnLimpiar.getActionMap().put("Reiniciar", reiniciarAction);
+        
         
         estado = VENTA;
                        
@@ -215,20 +254,25 @@ public class VentasView extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         btn_adddesc = new javax.swing.JButton();
         btn_remdesc = new javax.swing.JButton();
+        labelUsuario = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu2 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
+        menuItemNuevo = new javax.swing.JMenuItem();
+        menuItemEditar = new javax.swing.JMenuItem();
+        menuItemEliminar = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenuItem7 = new javax.swing.JMenuItem();
-        jMenu1 = new javax.swing.JMenu();
-        jMenuItem4 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
-        jMenuItem5 = new javax.swing.JMenuItem();
+        menuItemRepVentas = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
+        jMenu4 = new javax.swing.JMenu();
+        jMenu5 = new javax.swing.JMenu();
+        menuItemCUser = new javax.swing.JMenuItem();
+        menuItemModUser = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem8 = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Panaderia Tere");
         setBackground(new java.awt.Color(242, 242, 242));
         setResizable(false);
@@ -262,6 +306,7 @@ public class VentasView extends javax.swing.JFrame {
 
         btnCobrar.setBackground(new java.awt.Color(114, 151, 166));
         btnCobrar.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btnCobrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/currency_dollar_sign.png"))); // NOI18N
         btnCobrar.setText("Cobrar");
         btnCobrar.setToolTipText("Genera la venta");
         btnCobrar.addActionListener(new java.awt.event.ActionListener() {
@@ -272,6 +317,7 @@ public class VentasView extends javax.swing.JFrame {
 
         btnLimpiar.setBackground(new java.awt.Color(114, 151, 166));
         btnLimpiar.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btnLimpiar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/reload.png"))); // NOI18N
         btnLimpiar.setText("Reiniciar venta");
         btnLimpiar.setToolTipText("Borra la lista de productos");
         btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
@@ -295,7 +341,8 @@ public class VentasView extends javax.swing.JFrame {
 
         btnRemover.setBackground(new java.awt.Color(114, 151, 166));
         btnRemover.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        btnRemover.setText("Remover producto");
+        btnRemover.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/delete.png"))); // NOI18N
+        btnRemover.setText("Producto");
         btnRemover.setToolTipText("Remueve el producto seleccionado");
         btnRemover.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -315,7 +362,8 @@ public class VentasView extends javax.swing.JFrame {
 
         btn_adddesc.setBackground(new java.awt.Color(114, 151, 166));
         btn_adddesc.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        btn_adddesc.setText("Agregar descuento");
+        btn_adddesc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/add.png"))); // NOI18N
+        btn_adddesc.setText("Descuento");
         btn_adddesc.setToolTipText("Agregar descuento a la venta");
         btn_adddesc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -325,7 +373,8 @@ public class VentasView extends javax.swing.JFrame {
 
         btn_remdesc.setBackground(new java.awt.Color(114, 151, 166));
         btn_remdesc.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        btn_remdesc.setText("Eliminar descuento");
+        btn_remdesc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/delete.png"))); // NOI18N
+        btn_remdesc.setText("Descuento");
         btn_remdesc.setToolTipText("Eliminar descuento de la venta");
         btn_remdesc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -333,36 +382,47 @@ public class VentasView extends javax.swing.JFrame {
             }
         });
 
+        labelUsuario.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+
         jMenuBar1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
 
         jMenu2.setText("Productos");
         jMenu2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
 
-        jMenuItem1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jMenuItem1.setText("Nuevo");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        menuItemNuevo.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        menuItemNuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/document.png"))); // NOI18N
+        menuItemNuevo.setText("Nuevo");
+        menuItemNuevo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                menuItemNuevoActionPerformed(evt);
             }
         });
-        jMenu2.add(jMenuItem1);
+        jMenu2.add(menuItemNuevo);
 
-        jMenuItem2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jMenuItem2.setText("Editar");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+        menuItemEditar.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        menuItemEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/edit.png"))); // NOI18N
+        menuItemEditar.setText("Editar");
+        menuItemEditar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
+                menuItemEditarActionPerformed(evt);
             }
         });
-        jMenu2.add(jMenuItem2);
+        jMenu2.add(menuItemEditar);
 
-        jMenuItem3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jMenuItem3.setText("Eliminar");
-        jMenuItem3.setToolTipText("");
-        jMenu2.add(jMenuItem3);
+        menuItemEliminar.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        menuItemEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/trash_can.png"))); // NOI18N
+        menuItemEliminar.setText("Eliminar");
+        menuItemEliminar.setToolTipText("");
+        menuItemEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemEliminarActionPerformed(evt);
+            }
+        });
+        jMenu2.add(menuItemEliminar);
         jMenu2.add(jSeparator1);
 
         jMenuItem7.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jMenuItem7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/dispatch.png"))); // NOI18N
         jMenuItem7.setText("Entrada de mercancias");
         jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -373,33 +433,21 @@ public class VentasView extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu2);
 
-        jMenu1.setText("Edición");
-        jMenu1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-
-        jMenuItem4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jMenuItem4.setText("Cambiar contraseña maestra");
-        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem4ActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItem4);
-
-        jMenuBar1.add(jMenu1);
-
         jMenu3.setText("Reportes");
         jMenu3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
 
-        jMenuItem5.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jMenuItem5.setText("Ventas");
-        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+        menuItemRepVentas.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        menuItemRepVentas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/money_bag_dollar.png"))); // NOI18N
+        menuItemRepVentas.setText("Ventas");
+        menuItemRepVentas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem5ActionPerformed(evt);
+                menuItemRepVentasActionPerformed(evt);
             }
         });
-        jMenu3.add(jMenuItem5);
+        jMenu3.add(menuItemRepVentas);
 
         jMenuItem6.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jMenuItem6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/list.png"))); // NOI18N
         jMenuItem6.setText("Stock");
         jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -409,6 +457,53 @@ public class VentasView extends javax.swing.JFrame {
         jMenu3.add(jMenuItem6);
 
         jMenuBar1.add(jMenu3);
+        jMenuBar1.add(jMenu4);
+
+        jMenu5.setText("Usuarios");
+        jMenu5.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+
+        menuItemCUser.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        menuItemCUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/user_16.png"))); // NOI18N
+        menuItemCUser.setText("Crear usuario");
+        menuItemCUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemCUserActionPerformed(evt);
+            }
+        });
+        jMenu5.add(menuItemCUser);
+
+        menuItemModUser.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        menuItemModUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/edit.png"))); // NOI18N
+        menuItemModUser.setText("Modificar usuarios");
+        menuItemModUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemModUserActionPerformed(evt);
+            }
+        });
+        jMenu5.add(menuItemModUser);
+
+        jMenuItem4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jMenuItem4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/password.png"))); // NOI18N
+        jMenuItem4.setText("Cambiar contraseña");
+        jMenuItem4.setActionCommand("Cambiar contraseña");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(jMenuItem4);
+
+        jMenuItem8.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jMenuItem8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/door.png"))); // NOI18N
+        jMenuItem8.setText("Cerrar sesión");
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem8ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(jMenuItem8);
+
+        jMenuBar1.add(jMenu5);
 
         setJMenuBar(jMenuBar1);
 
@@ -422,32 +517,32 @@ public class VentasView extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(panelPanes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(labelAccion)
+                        .addGap(18, 18, 18)
+                        .addComponent(textBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(labelUsuario))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(labelAccion)
-                                .addGap(18, 18, 18)
-                                .addComponent(textBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(32, 32, 32)
                                 .addComponent(btnRemover)
                                 .addGap(18, 18, 18)
                                 .addComponent(btn_adddesc)
                                 .addGap(18, 18, 18)
                                 .addComponent(btn_remdesc)
-                                .addGap(421, 421, 421)
-                                .addComponent(btnLimpiar)
-                                .addGap(31, 31, 31)
-                                .addComponent(btnCobrar)))
-                        .addGap(0, 38, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 357, Short.MAX_VALUE)
+                                .addComponent(btnLimpiar))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING))))
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(textDescuento)
-                            .addComponent(textTotal, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(textDescuento)
+                                .addComponent(textTotal, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE))
+                            .addComponent(btnCobrar, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -456,12 +551,13 @@ public class VentasView extends javax.swing.JFrame {
                 .addGap(16, 16, 16)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelAccion)
-                    .addComponent(textBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(textBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelUsuario))
                 .addGap(18, 18, 18)
-                .addComponent(panelPanes, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelPanes, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
@@ -469,7 +565,7 @@ public class VentasView extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(textTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 86, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCobrar)
                     .addComponent(btnLimpiar)
@@ -482,11 +578,11 @@ public class VentasView extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void menuItemNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemNuevoActionPerformed
         
-        boolean valido = autenticarUsuario();
-        
-        if (valido) {
+//        boolean valido = autenticarUsuario();
+//        
+//        if (valido) {
             ProductosView vProd = new ProductosView(this, true);
             vProd.setVisible(true);
 
@@ -502,8 +598,8 @@ public class VentasView extends javax.swing.JFrame {
                     System.out.println("jdialog window closing event received Close 2");
                 }
             });            
-        }                              
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+//        }                              
+    }//GEN-LAST:event_menuItemNuevoActionPerformed
 
     private void textBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textBuscarActionPerformed
         // TODO add your handling code here:
@@ -609,19 +705,19 @@ public class VentasView extends javax.swing.JFrame {
         rep.setVisible(true);
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
-    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-        boolean valido = autenticarUsuario();
-        
-        if (valido) {
+    private void menuItemRepVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemRepVentasActionPerformed
+//        boolean valido = autenticarUsuario();
+//        
+//        if (valido) {
             RepVentas rep = new RepVentas();
             rep.setVisible(true);
-        }
-    }//GEN-LAST:event_jMenuItem5ActionPerformed
+//        }
+    }//GEN-LAST:event_menuItemRepVentasActionPerformed
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        boolean valido = autenticarUsuario();
-        
-        if (valido) {
+    private void menuItemEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemEditarActionPerformed
+//        boolean valido = autenticarUsuario();
+//        
+//        if (valido) {
         
             ActProducto actualizar = new ActProducto(this, true);
             actualizar.setVisible(true);
@@ -638,15 +734,15 @@ public class VentasView extends javax.swing.JFrame {
                     System.out.println("jdialog window closing event received Close 2");
                 }
             });
-        }
+//        }
         
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    }//GEN-LAST:event_menuItemEditarActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         boolean valido = autenticarUsuario();
         
         if (valido) {
-            ActPass nuevopass = new ActPass(this, true);
+            ActPass nuevopass = new ActPass(this, true, sesion);
             nuevopass.setVisible(true);
         }
     }//GEN-LAST:event_jMenuItem4ActionPerformed
@@ -695,6 +791,25 @@ public class VentasView extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnRemoverActionPerformed
 
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+        new PrincipalView().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jMenuItem8ActionPerformed
+
+    private void menuItemEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemEliminarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuItemEliminarActionPerformed
+
+    private void menuItemCUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemCUserActionPerformed
+        CrearUsuarioView vUser = new CrearUsuarioView(this, true);//Modificar
+        vUser.setVisible(true);
+    }//GEN-LAST:event_menuItemCUserActionPerformed
+
+    private void menuItemModUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemModUserActionPerformed
+//        CrearUsuarioView vUser = new CrearUsuarioView(this, true);//Visualizar
+//        vUser.setVisible(true);
+    }//GEN-LAST:event_menuItemModUserActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -738,20 +853,25 @@ public class VentasView extends javax.swing.JFrame {
     private javax.swing.JButton btn_remdesc;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JLabel labelAccion;
+    private javax.swing.JLabel labelUsuario;
+    private javax.swing.JMenuItem menuItemCUser;
+    private javax.swing.JMenuItem menuItemEditar;
+    private javax.swing.JMenuItem menuItemEliminar;
+    private javax.swing.JMenuItem menuItemModUser;
+    private javax.swing.JMenuItem menuItemNuevo;
+    private javax.swing.JMenuItem menuItemRepVentas;
     private javax.swing.JPanel panelPanes;
     public javax.swing.JTable tableItems;
     public javax.swing.JTextField textBuscar;
@@ -800,10 +920,14 @@ public class VentasView extends javax.swing.JFrame {
             //Agregamos cada pan al panel
             p = masvendidos.get(i);
             btemp = new JButton(p.getNombre());
-            btemp.setFont(default_font);
+            btemp.setFont(new Font("Tahoma", Font.BOLD, 12));//(default_font);
+            btemp.setForeground(Color.decode(Config.ColorText));
+            btemp.setBackground(Color.decode(Config.ColorElement));
+            btemp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/bread_32.png"))); 
+            
             arrPanes[i] = btemp;
             panelPanes.add(arrPanes[i]);
-            arrPanes[i].setMargin(new Insets(35, 35, 35, 35));
+            arrPanes[i].setMargin(new Insets(20, 20, 20, 20));
             
             arrPanes[i].addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -917,7 +1041,7 @@ public class VentasView extends javax.swing.JFrame {
 
     private boolean autenticarUsuario() { 
         JLabel label = new JLabel();
-        Usuario user = Usuario.find("Admin");
+        //Usuario user = Usuario.find("Admin");
         JPasswordField pf = new JPasswordField();
         String myPass;
         int okCxl;
@@ -927,7 +1051,7 @@ public class VentasView extends javax.swing.JFrame {
         do{      
             okCxl = JOptionPane.showConfirmDialog(null, pf, "Contraseña", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
             myPass = String.valueOf(pf.getPassword());
-            if (okCxl == JOptionPane.OK_OPTION && PasswordUtils.verifyUserPassword(myPass, user.getPass(), user.getSalt())){                
+            if (okCxl == JOptionPane.OK_OPTION && PasswordUtils.verifyUserPassword(myPass, sesion.getPass(), sesion.getSalt())){                
                 return true;
             }else if(okCxl == JOptionPane.CANCEL_OPTION)
                 return false;
@@ -1025,32 +1149,6 @@ public class VentasView extends javax.swing.JFrame {
         
         calculaTotalVenta();
     }
-
-//    private void cambiaEstado(boolean isVenta) {
-//        switch(estado){
-//            case VENTA:
-//
-//                labelAccion.setText(strEfectivo);   
-//                
-//                if(isVenta)
-//                    estado = EFECTIVO;
-//                else
-//                    estado = CANTIDAD;
-//                
-//                break;
-//            case EFECTIVO:
-//
-//                labelAccion.setText(strCambio);
-//                estado = CAMBIO;
-//                break;
-//            case CAMBIO:
-//
-//                labelAccion.setText(strProducto);
-//                estado = VENTA;
-//                break;
-//        }            
-//        
-//    }
 
     private void actualizaElementosPantalla(int estado) {
         switch(estado){

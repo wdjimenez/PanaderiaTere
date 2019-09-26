@@ -171,9 +171,9 @@ public class Producto {
             conn.commit();
             return true;
         } catch (SQLException ex) {
-            Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
+            Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);            
         }
+        return false;
     }
 
     public Boolean update() {

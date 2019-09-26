@@ -5,8 +5,10 @@
  */
 package pos.view;
 
+import java.awt.Color;
 import javax.swing.table.DefaultTableModel;
 import pos.model.Producto;
+import pos.util.Config;
 
 /**
  *
@@ -21,7 +23,8 @@ public class RepStock extends javax.swing.JFrame {
         initComponents();
         llenarjTable();
         
-        getContentPane().setBackground(new java.awt.Color(242,242,242));
+        getContentPane().setBackground(Color.decode(Config.ColorContent));
+        
         
         setLocationRelativeTo(null);
     }

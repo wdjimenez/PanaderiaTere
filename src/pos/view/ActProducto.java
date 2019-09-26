@@ -5,9 +5,11 @@
  */
 package pos.view;
 
+import java.awt.Color;
 import javax.swing.JOptionPane;
 import pos.model.ComboItem;
 import pos.model.Producto;
+import pos.util.Config;
 
 /**
  *
@@ -24,7 +26,8 @@ public class ActProducto extends javax.swing.JDialog {
         initComponents();
         llenarComboBox();
         
-        getContentPane().setBackground(new java.awt.Color(242,242,242));
+        getContentPane().setBackground(Color.decode(Config.ColorContent));
+        jButton1.setBackground(Color.decode(Config.ColorElement));
         
         setLocationRelativeTo(null);
     }
@@ -69,6 +72,7 @@ public class ActProducto extends javax.swing.JDialog {
         jLabel3.setText("Precio");
 
         jButton1.setBackground(new java.awt.Color(114, 151, 166));
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/edit.png"))); // NOI18N
         jButton1.setText("Actualizar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -178,7 +182,7 @@ public class ActProducto extends javax.swing.JDialog {
         p = Producto.find(item.getIdProd());
         
         precio_old = p.getPrecio();
-        precio_new = ((Double)textPrecio.getValue()).floatValue();
+        precio_new = ((Long)textPrecio.getValue()).floatValue();
         //Verificamos que se hayan hecho cambios
         if(textNombre.getText().compareTo(p.getNombre()) != 0 ||
             precio_new != precio_old ||

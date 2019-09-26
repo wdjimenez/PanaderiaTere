@@ -29,6 +29,33 @@ public class Usuario {
     private String user;
     private String pass;
     private String salt;
+    private String nombre;
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getApellido() {
+        return apellido;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
+    }
+    private String apellido;
+    private int admin;
+
+    public int getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(int admin) {
+        this.admin = admin;
+    }
 
     public String getSalt() {
         return salt;
@@ -37,10 +64,13 @@ public class Usuario {
     public Usuario() {
     }
 
-    public Usuario(String user, String pass, String salt) {
+    public Usuario(String user, String pass, String salt, String nombre, String apellido, int admin) {
         this.user = user;
         this.pass = pass;
         this.salt = salt;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.admin = admin;
     }
 
     public void setSalt(String salt) {
@@ -62,6 +92,36 @@ public class Usuario {
     public void setPass(String pass) {
         this.pass = pass;
     }
+    
+    public Boolean isAdmin(){
+        if (this.getAdmin() == 1)
+            return true;
+        return false;
+    }
+    
+    public static Boolean createUser(String usuario, String pass, String salt, String nombre, String ape, int admin){
+        conn = DataBase.getConnection();
+        try {
+            conn.setAutoCommit(false);
+            
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO usuarios (user,pass,salt,nombre,apellido,admin) VALUES (?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, usuario);            
+            ps.setString(2, pass);
+            ps.setString(3, salt);
+            ps.setString(4, nombre);
+            ps.setString(5, ape);
+            ps.setInt(6, admin);
+            ps.executeUpdate();
+            ResultSet generatedKeys = ps.getGeneratedKeys();
+            while (generatedKeys.next()) {
+                conn.commit();
+                return true;
+            }                        
+        } catch (SQLException ex) {
+            Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);            
+        }
+        return false;
+    }
 
     public static Usuario find(String user) {
         conn = DataBase.getConnection();
@@ -75,6 +135,9 @@ public class Usuario {
                 usuario.setUser(rs.getString("user"));
                 usuario.setPass(rs.getString("pass"));
                 usuario.setSalt(rs.getString("salt"));
+                usuario.setAdmin(rs.getInt("admin"));
+                usuario.setNombre(rs.getString("nombre"));
+                usuario.setApellido(rs.getString("apellido"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(Usuario.class.getName()).log(Level.SEVERE, null, ex);
@@ -82,15 +145,15 @@ public class Usuario {
         return usuario;
     }
 
-    public Boolean update() {
+    public static Boolean updatePass(String user, String newpass, String salt) {
         conn = DataBase.getConnection();
         try {
             conn.setAutoCommit(true);
             
             PreparedStatement ps = conn.prepareStatement("UPDATE usuarios SET pass = ?, salt = ? WHERE user = ?");
-            ps.setString(1, getPass());
-            ps.setString(2, getSalt());
-            ps.setString(3, getUser());
+            ps.setString(1, newpass);
+            ps.setString(2, salt);
+            ps.setString(3, user);
             ps.execute();
             return true;
         } catch (SQLException ex) {

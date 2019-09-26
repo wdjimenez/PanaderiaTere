@@ -5,9 +5,11 @@
  */
 package pos.view;
 
+import java.awt.Color;
 import javax.swing.JOptionPane;
 import pos.model.PasswordUtils;
 import pos.model.Usuario;
+import pos.util.Config;
 
 /**
  *
@@ -18,9 +20,19 @@ public class ActPass extends javax.swing.JDialog {
     /**
      * Creates new form ActPass
      */
-    public ActPass(java.awt.Frame parent, boolean modal) {
+    private Usuario sesion;
+    
+    
+    public ActPass(java.awt.Frame parent, boolean modal, Usuario in) {
         super(parent, modal);
         initComponents();
+        
+        sesion = in;
+        
+        
+        getContentPane().setBackground(Color.decode(Config.ColorContent));
+        jButton1.setBackground(Color.decode(Config.ColorElement));
+        
         setLocationRelativeTo(null);
     }
 
@@ -105,17 +117,21 @@ public class ActPass extends javax.swing.JDialog {
         String myPass1 = String.valueOf(passnew.getPassword());
         String myPass2 = String.valueOf(passrep.getPassword());        
         
+        if(myPass1.compareTo("") == 0){
+            JOptionPane.showMessageDialog(this, "El password no puede ser vacio");
+            return;
+        }
         if(myPass1.compareTo(myPass2) != 0){
             JOptionPane.showMessageDialog(this, "Las contraseñas no coinciden");
             return;
         }
         
         //Recuperamos la semilla
-        String salt = PasswordUtils.getSalt(30);        
-        String newPass = PasswordUtils.generateSecurePassword(myPass1, salt);
+        //String salt = PasswordUtils.getSalt(30);        
+        String newPass = PasswordUtils.generateSecurePassword(myPass1, sesion.getSalt());
         
-        Usuario user = new Usuario("Admin", newPass, salt);
-        if(user.update()){
+        //Usuario user = new Usuario("Admin", newPass, salt);
+        if(Usuario.updatePass(sesion.getUser(), newPass, sesion.getSalt())){
             JOptionPane.showMessageDialog(this, "Se actualizó la contraseña correctamente");
             this.dispose();
         }else{

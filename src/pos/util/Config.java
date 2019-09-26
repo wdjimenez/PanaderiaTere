@@ -26,7 +26,12 @@ public class Config {
     private final HashMap<String, String> params;
 
     private String configDir;
-
+    
+    public static final String ColorContent = "#FFFFFF";//"#DFDCE3";
+    public static final String ColorElement = "#E74C3C";//"#85AFC9"; //"#D2D904
+    public static final String ColorText = "#FFFFFF";
+    
+    
     public Config() {
         params = new HashMap<>();
         params.put("os", System.getProperty("os.name"));
