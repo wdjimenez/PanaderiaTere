@@ -48,13 +48,16 @@ public class RepVentas extends javax.swing.JFrame {
         
         Date d = new Date();
         
-        SimpleDateFormat sf = new SimpleDateFormat("dd/MM/yyyy");
+//        SimpleDateFormat sf = new SimpleDateFormat("dd/MM/yyyy");
         
 //        textFechaFrom.setText(sf.format(d));
 //        
 //        textFechaTo.setText(sf.format(d));
-        textFechaFrom.setValue(d);
-        textFechaTo.setValue(d);        
+//        textFechaFrom.setValue(d);
+//        textFechaTo.setValue(d);        
+        
+        dateFrom.setDate(d);
+        dateTo.setDate(d);
         
         setLocationRelativeTo(null);
     }
@@ -64,6 +67,9 @@ public class RepVentas extends javax.swing.JFrame {
         DefaultTableModel dtm = (DefaultTableModel) tableVentas.getModel();
         int nRow = dtm.getRowCount();
         float total=0, descuento  = 0;
+
+	ajustaAnchoFilas(tableVentas);       
+        ajustaAnchoFilas(tableDescuentos);
                 
         for (int i = 0 ; i < nRow ; i++){
             total += (float)dtm.getValueAt(i,6);
@@ -93,15 +99,15 @@ public class RepVentas extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tableVentas = new javax.swing.JTable();
         jButton2 = new javax.swing.JButton();
-        textFechaFrom = new javax.swing.JFormattedTextField();
         textTotal = new javax.swing.JFormattedTextField();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tableDescuentos = new javax.swing.JTable();
-        textFechaTo = new javax.swing.JFormattedTextField();
-        jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        dateFrom = new com.toedter.calendar.JDateChooser();
+        dateTo = new com.toedter.calendar.JDateChooser();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Reporte de Ventas");
@@ -113,14 +119,14 @@ public class RepVentas extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Fecha", "Hora", "Nota", "Producto", "Cantidad", "Precio", "Importe"
+                "Fecha", "Hora", "Nota", "Producto", "Cantidad", "Precio", "Importe", "Usuario"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Float.class, java.lang.Float.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Float.class, java.lang.Float.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -142,14 +148,6 @@ public class RepVentas extends javax.swing.JFrame {
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
-            }
-        });
-
-        textFechaFrom.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter()));
-        textFechaFrom.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        textFechaFrom.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFechaFromActionPerformed(evt);
             }
         });
 
@@ -180,22 +178,18 @@ public class RepVentas extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(tableDescuentos);
 
-        textFechaTo.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter()));
-        textFechaTo.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        textFechaTo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFechaToActionPerformed(evt);
-            }
-        });
-
-        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel2.setText("Rango de fechas");
-
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel3.setText("Ventas");
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel4.setText("Descuentos");
+
+        dateFrom.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+
+        dateTo.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel5.setText("Fechas");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -205,17 +199,7 @@ public class RepVentas extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane1)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(18, 18, 18)
-                                .addComponent(textFechaFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(textFechaTo, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jButton2)
-                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(jScrollPane1)
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -234,16 +218,26 @@ public class RepVentas extends javax.swing.JFrame {
                         .addComponent(jLabel4)
                         .addGap(906, 906, 906)))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(228, 228, 228)
+                .addComponent(jLabel5)
+                .addGap(18, 18, 18)
+                .addComponent(dateFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(dateTo, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton2)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jButton2)
-                    .addComponent(textFechaFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(textFechaTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
+                    .addComponent(dateFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dateTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -268,17 +262,13 @@ public class RepVentas extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void textFechaFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFechaFromActionPerformed
-        buscaVentas();
-    }//GEN-LAST:event_textFechaFromActionPerformed
-
-    private void textFechaToActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFechaToActionPerformed
-        buscaVentas();
-    }//GEN-LAST:event_textFechaToActionPerformed
-
     private void buscaVentas() {
-        Date from = (Date)textFechaFrom.getValue();
-        Date to = (Date)textFechaTo.getValue();
+        //Date from = (Date)textFechaFrom.getValue();
+        //Date to = (Date)textFechaTo.getValue();
+        
+        Date from = dateFrom.getDate();
+        Date to = dateTo.getDate();
+        
         JLabel label = new JLabel();
                         
         SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
@@ -304,7 +294,8 @@ public class RepVentas extends javax.swing.JFrame {
                ventas.getNombre(),
                ventas.getCantidad(),
                ventas.getPrecio(),
-               ventas.getImporte()
+               ventas.getImporte(),
+               ventas.getUsuario()
            });
         });
         
@@ -323,41 +314,56 @@ public class RepVentas extends javax.swing.JFrame {
         calculaTotalVenta();
     }
 
+    private void ajustaAnchoFilas(JTable tablegen) {
+        try {
+            for (int row=0; row<tablegen.getRowCount(); row++) {
+                int rowHeight = tablegen.getRowHeight();
+
+                for (int column=0; column<tablegen.getColumnCount(); column++) {
+                    Component comp = tablegen.prepareRenderer(tablegen.getCellRenderer(row, column), row, column);
+                    rowHeight = Math.max(rowHeight, comp.getPreferredSize().height);
+                }
+
+                tablegen.setRowHeight(row, rowHeight);
+            }
+        } catch(ClassCastException e) { }
+    }
+
     /**
      * @param args the command line arguments
      */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(RepVentas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(RepVentas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(RepVentas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(RepVentas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new RepVentas().setVisible(true);
-//            }
-//        });
-//    }
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(RepVentas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(RepVentas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(RepVentas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(RepVentas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new RepVentas().setVisible(true);
+            }
+        });
+    }
     
     static class DecimalFormatRenderer extends DefaultTableCellRenderer {
         private static final DecimalFormat formatter = new DecimalFormat( "#.00" );
@@ -380,17 +386,17 @@ public class RepVentas extends javax.swing.JFrame {
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private com.toedter.calendar.JDateChooser dateFrom;
+    private com.toedter.calendar.JDateChooser dateTo;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tableDescuentos;
     private javax.swing.JTable tableVentas;
-    private javax.swing.JFormattedTextField textFechaFrom;
-    private javax.swing.JFormattedTextField textFechaTo;
     private javax.swing.JFormattedTextField textTotal;
     // End of variables declaration//GEN-END:variables
 }

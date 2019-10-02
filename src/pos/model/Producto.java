@@ -236,8 +236,8 @@ public class Producto {
         return stock;
     }
     
-    public static boolean addStock(int idProd, int cantidad){
-        String sqlProdStock = "INSERT INTO prod_stock(idProd, cantidad, fecha) VALUES(?, ?, julianday('now'))";
+    public static boolean addStock(int idProd, int cantidad, String user){
+        String sqlProdStock = "INSERT INTO prod_stock(idProd, cantidad, fecha, user) VALUES(?, ?, julianday('now'), ?)";
         String sqlUpdStock = "UPDATE productos SET stock = ? WHERE id = ?";
         int newStock = 0;
         conn = DataBase.getConnection();
@@ -248,6 +248,7 @@ public class Producto {
             PreparedStatement ps = conn.prepareStatement(sqlProdStock);
             ps.setInt(1, idProd);
             ps.setInt(2, cantidad);
+            ps.setString(3, user);
             
             ps.execute();
             

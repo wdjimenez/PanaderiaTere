@@ -30,6 +30,11 @@ public class Ventas {
     private float precio;
     private float importe;
     private float descuento;
+    private String usuario;
+
+    public String getUsuario() {
+        return usuario;
+    }
 
     public float getDescuento() {
         return descuento;
@@ -99,11 +104,11 @@ public class Ventas {
     
     
     
-    public static boolean generaVenta(float total, float descuento, List<ItemVentas> items){
+    public static boolean generaVenta(float total, float descuento, String user, List<ItemVentas> items){
         ResultSet rs = null;
         PreparedStatement pstmt1 = null, pstmt2 = null, pstmt3 = null;
         int ventaId, stock;
-        String sqlVenta = "INSERT INTO ventas(fecha, total, descuento) VALUES(julianday('now'),?, ?)";
+        String sqlVenta = "INSERT INTO ventas(fecha, total, descuento, user) VALUES(julianday('now'),?, ?, ?)";
         String sqlItem = "INSERT INTO productosventa(id_venta, id_producto, cantidad, precio, importe) VALUES(?,?,?,?,?)";
         String sqlStock = "SELECT stock FROM productos WHERE id = ?";
         String sqlUpdStock = "UPDATE productos SET stock = ? WHERE id = ?";
@@ -121,6 +126,7 @@ public class Ventas {
  
             pstmt1.setFloat(1, total);
             pstmt1.setFloat(2, descuento);
+            pstmt1.setString(3, user);
             
             
             int rowAffected = pstmt1.executeUpdate();
@@ -222,11 +228,13 @@ public class Ventas {
         List<Ventas> ventas = new ArrayList<>();
         String consulta = "SELECT date(ventas.fecha,'localtime') as fecha, time(ventas.fecha, 'localtime') as hora, " +
 "	   ventas.id as venta, productos.nombre as nombre, productosventa.cantidad, " +
-"	   productosventa.precio, productosventa.importe " +
+"	   productosventa.precio, productosventa.importe, usuarios.user " +
 "	   FROM ventas INNER JOIN productosventa " +
 "						ON productosventa.id_venta = ventas.id " +
 "				   INNER JOIN productos " +
 "						ON productos.id = productosventa.id_producto " +
+"                             LEFT OUTER JOIN usuarios " +
+"                                               ON ventas.user = usuarios.user " +                
 "	   WHERE date(ventas.fecha,'localtime') BETWEEN \"" + from + "\" AND \"" + to + "\" " +
 "	ORDER BY date(ventas.fecha,'localtime'), time(ventas.fecha, 'localtime')";
         
@@ -242,7 +250,8 @@ public class Ventas {
                 v.setHora(rs.getString("hora"));
                 v.setImporte(rs.getFloat("importe"));
                 v.setNombre(rs.getString("nombre"));
-                v.setPrecio(rs.getFloat("precio"));                
+                v.setPrecio(rs.getFloat("precio"));    
+                v.usuario = rs.getString("user");
                 ventas.add(v);
             }
         }catch (SQLException ex) {

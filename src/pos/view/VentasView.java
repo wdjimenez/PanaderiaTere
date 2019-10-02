@@ -8,6 +8,7 @@ package pos.view;
 import com.mxrck.autocompleter.AutoCompleterCallback;
 import com.mxrck.autocompleter.TextAutoCompleter;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
@@ -103,6 +104,7 @@ public class VentasView extends javax.swing.JFrame {
             menuItemRepVentas.setEnabled(false);
             menuItemCUser.setEnabled(false);
             menuItemModUser.setEnabled(false);
+            menuItemRepMov.setEnabled(false);
         }
         
         panelPanes.setBackground(Color.decode(Config.ColorContent));
@@ -215,7 +217,20 @@ public class VentasView extends javax.swing.JFrame {
     private void calculaTotalVenta(){
         DefaultTableModel dtm = (DefaultTableModel) tableItems.getModel();
         int nRow = dtm.getRowCount();
-        float total=0, descuento = 0;
+        float total = 0, descuento = 0;
+        
+        try {
+            for (int row=0; row<tableItems.getRowCount(); row++) {
+                int rowHeight = tableItems.getRowHeight();
+ 
+                for (int column=0; column<tableItems.getColumnCount(); column++) {
+                    Component comp = tableItems.prepareRenderer(tableItems.getCellRenderer(row, column), row, column);
+                    rowHeight = Math.max(rowHeight, comp.getPreferredSize().height);
+                }
+ 
+                tableItems.setRowHeight(row, rowHeight);
+            }
+        } catch(ClassCastException e) { }
        
         for (int i = 0 ; i < nRow ; i++){
 //            for (int j = 0 ; j < nCol ; j++){
@@ -265,6 +280,7 @@ public class VentasView extends javax.swing.JFrame {
         jMenu3 = new javax.swing.JMenu();
         menuItemRepVentas = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
+        menuItemRepMov = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         jMenu5 = new javax.swing.JMenu();
         menuItemCUser = new javax.swing.JMenuItem();
@@ -455,6 +471,16 @@ public class VentasView extends javax.swing.JFrame {
             }
         });
         jMenu3.add(jMenuItem6);
+
+        menuItemRepMov.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        menuItemRepMov.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/dispatch.png"))); // NOI18N
+        menuItemRepMov.setText("Movimientos");
+        menuItemRepMov.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemRepMovActionPerformed(evt);
+            }
+        });
+        jMenu3.add(menuItemRepMov);
 
         jMenuBar1.add(jMenu3);
         jMenuBar1.add(jMenu4);
@@ -695,7 +721,7 @@ public class VentasView extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCobrarActionPerformed
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
-        Stock stock = new Stock(this, true);
+        Stock stock = new Stock(this, true, sesion);
         stock.setVisible(true);
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
@@ -739,12 +765,12 @@ public class VentasView extends javax.swing.JFrame {
     }//GEN-LAST:event_menuItemEditarActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        boolean valido = autenticarUsuario();
-        
-        if (valido) {
+//        boolean valido = autenticarUsuario();
+//        
+//        if (valido) {
             ActPass nuevopass = new ActPass(this, true, sesion);
             nuevopass.setVisible(true);
-        }
+//        }
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void btn_adddescActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_adddescActionPerformed
@@ -761,15 +787,19 @@ public class VentasView extends javax.swing.JFrame {
                 flag = true;
                 try{
                     label.setText("Descuento");
-                    descuento = Float.parseFloat(JOptionPane.showInputDialog(this, label));
+                    String input = JOptionPane.showInputDialog(this, label);
+                    if (input != null) {                                           
+                        descuento = Float.parseFloat(input);
 
-                    if(descuento > (Double)textTotal.getValue()){
-                        label.setText("El descuento es mayor al importe total");
-                        JOptionPane.showMessageDialog(this, label);
-                        flag = false;
-                    }                     
+                        if(descuento > (Double)textTotal.getValue()){
+                            label.setText("El descuento es mayor al importe total");
+                            JOptionPane.showMessageDialog(this, label);
+                            flag = false;
+                        }                     
+                    }else
+                        flag = true;
                 }catch(NumberFormatException e){
-                    flag = false;
+                    flag = false;                    
                 }
 
             }while(!flag);
@@ -809,6 +839,11 @@ public class VentasView extends javax.swing.JFrame {
 //        CrearUsuarioView vUser = new CrearUsuarioView(this, true);//Visualizar
 //        vUser.setVisible(true);
     }//GEN-LAST:event_menuItemModUserActionPerformed
+
+    private void menuItemRepMovActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemRepMovActionPerformed
+        RepMovimientosView rep = new RepMovimientosView();
+        rep.setVisible(true);
+    }//GEN-LAST:event_menuItemRepMovActionPerformed
 
     /**
      * @param args the command line arguments
@@ -871,6 +906,7 @@ public class VentasView extends javax.swing.JFrame {
     private javax.swing.JMenuItem menuItemEliminar;
     private javax.swing.JMenuItem menuItemModUser;
     private javax.swing.JMenuItem menuItemNuevo;
+    private javax.swing.JMenuItem menuItemRepMov;
     private javax.swing.JMenuItem menuItemRepVentas;
     private javax.swing.JPanel panelPanes;
     public javax.swing.JTable tableItems;
@@ -1040,27 +1076,38 @@ public class VentasView extends javax.swing.JFrame {
     }
 
     private boolean autenticarUsuario() { 
-        JLabel label = new JLabel();
+//        JLabel label = new JLabel();
         //Usuario user = Usuario.find("Admin");
-        JPasswordField pf = new JPasswordField();
-        String myPass;
-        int okCxl;
         
-        pf.setFont(default_font);        
+        AutenticarAdminView autenticar = new AutenticarAdminView(this, true);
         
-        do{      
-            okCxl = JOptionPane.showConfirmDialog(null, pf, "Contraseña", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-            myPass = String.valueOf(pf.getPassword());
-            if (okCxl == JOptionPane.OK_OPTION && PasswordUtils.verifyUserPassword(myPass, sesion.getPass(), sesion.getSalt())){                
-                return true;
-            }else if(okCxl == JOptionPane.CANCEL_OPTION)
-                return false;
-            else{
-                label.setText("Contraseña incorrecta, intente nuevamente");
-                JOptionPane.showMessageDialog(this, label);
-            }
-            
-        }while(true);
+        autenticar.setVisible(true);
+        
+        if (autenticar.isAdmin()) 
+            return true;
+        else
+            return false;
+        
+        
+//        JPasswordField pf = new JPasswordField();
+//        String myPass;
+//        int okCxl;
+//        
+//        pf.setFont(default_font);        
+//        
+//        do{      
+//            okCxl = JOptionPane.showConfirmDialog(null, pf, "Contraseña", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+//            myPass = String.valueOf(pf.getPassword());
+//            if (okCxl == JOptionPane.OK_OPTION && PasswordUtils.verifyUserPassword(myPass, sesion.getPass(), sesion.getSalt())){                
+//                return true;
+//            }else if(okCxl == JOptionPane.CANCEL_OPTION)
+//                return false;
+//            else{
+//                label.setText("Contraseña incorrecta, intente nuevamente");
+//                JOptionPane.showMessageDialog(this, label);
+//            }
+//            
+//        }while(true);
     }
 
     private void cobrarVenta() {
@@ -1086,7 +1133,7 @@ public class VentasView extends javax.swing.JFrame {
             }
             
             //Si la venta se genera exitosamente procedemos a realizar el cobro
-            if(Ventas.generaVenta(((Double)textTotal.getValue()).floatValue(), ((Double)textDescuento.getValue()).floatValue(), items)){
+            if(Ventas.generaVenta(((Double)textTotal.getValue()).floatValue(), ((Double)textDescuento.getValue()).floatValue(), sesion.getUser(), items)){
                 estado = EFECTIVO;
                 
                 actualizaElementosPantalla(estado);

@@ -10,6 +10,7 @@ import java.awt.Component;
 import javax.swing.JOptionPane;
 import pos.model.Producto;
 import pos.model.ComboItem;
+import pos.model.Usuario;
 import pos.util.Config;
 
 /**
@@ -17,12 +18,14 @@ import pos.util.Config;
  * @author wdjimenez
  */
 public class Stock extends javax.swing.JDialog {
-
+    private Usuario sesion;
     /**
      * Creates new form Stock
      */
-    public Stock(java.awt.Frame parent, boolean modal) {
+    public Stock(java.awt.Frame parent, boolean modal, Usuario s) {
         super(parent, modal);
+        
+        sesion = s;
         
         initComponents();
         llenarComboBox();
@@ -194,7 +197,7 @@ public class Stock extends javax.swing.JDialog {
             return;
         }
         
-        if(Producto.addStock(item.getIdProd(), cantidad)){
+        if(Producto.addStock(item.getIdProd(), cantidad, sesion.getUser())){
             JOptionPane.showMessageDialog(null, "Se actualizo el stock del producto");
             //this.dispose();                        
             
