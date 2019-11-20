@@ -36,7 +36,7 @@ public class DataBase {
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS prod_stock(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, idProd INTEGER NOT NULL, fecha REAL NOT NULL, cantidad INTEGER NOT NULL, user Text, FOREIGN KEY(user) REFERENCES usuarios(user), FOREIGN KEY(idProd) REFERENCES productos(id));"); 
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS prod_precio(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, idProd INTEGER NOT NULL, fecha REAL NOT NULL, precio_old REAL NOT NULL, precio_new REAL NOT NULL, FOREIGN KEY(idProd) REFERENCES productos(id));"); 
                 
-                statement.executeUpdate("INSERT INTO usuarios (user,pass,salt) VALUES ('admin','efY8UkOG2VOl7Px7WUIyDZm+O9kxFDGAIHYPUCzkFb4=', '4MdnVf2CXSTlsR7bdy6GZ9ePN0qBKi');"); //default password: password
+                statement.executeUpdate("INSERT INTO usuarios (user,pass,salt,nombre, apellido, admin) VALUES ('admin','efY8UkOG2VOl7Px7WUIyDZm+O9kxFDGAIHYPUCzkFb4=', '4MdnVf2CXSTlsR7bdy6GZ9ePN0qBKi', 'Teresa', 'Gomez', 1);"); //default password: password
 
                 statement.executeUpdate("INSERT INTO productos (nombre,precio,stock, inactivo) VALUES ('Cazuela',10.00,0,0);");
                 statement.executeUpdate("INSERT INTO productos (nombre,precio,stock, inactivo) VALUES ('Capricho',8.50,0,0);");
