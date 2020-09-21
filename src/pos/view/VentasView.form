@@ -177,7 +177,6 @@
                   <Image iconType="3" name="/pos/iconos/password.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Cambiar contrase&#xf1;a"/>
-                <Property name="actionCommand" type="java.lang.String" value="Cambiar contrase&#xf1;a"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem4ActionPerformed"/>

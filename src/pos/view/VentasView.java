@@ -922,7 +922,7 @@ public class VentasView extends javax.swing.JFrame {
         
         if(confirm == 1){
             if(i>0){
-                int dialogResult = JOptionPane.showConfirmDialog (null, "¿Desea eliminar los registros de la tabla?");
+                int dialogResult = JOptionPane.showConfirmDialog (null, "¿Desea eliminar todos los productos de esta venta?");
                 
                 if(dialogResult == JOptionPane.YES_OPTION){
                     textTotal.setValue(new Double(0));
