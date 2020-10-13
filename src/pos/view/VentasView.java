@@ -291,7 +291,6 @@ public class VentasView extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Panaderia Tere");
         setBackground(new java.awt.Color(242, 242, 242));
-        setResizable(false);
 
         textBuscar.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         textBuscar.setToolTipText("Introduzca el producto aquí");
@@ -511,7 +510,6 @@ public class VentasView extends javax.swing.JFrame {
         jMenuItem4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jMenuItem4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/password.png"))); // NOI18N
         jMenuItem4.setText("Cambiar contraseña");
-        jMenuItem4.setActionCommand("Cambiar contraseña");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem4ActionPerformed(evt);
@@ -582,7 +580,7 @@ public class VentasView extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(panelPanes, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)

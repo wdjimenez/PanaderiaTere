@@ -244,7 +244,7 @@ public class RepMovimientosView extends javax.swing.JFrame {
         String consulta = "SELECT date(prod_stock.fecha,'localtime') as fecha, time(prod_stock.fecha, 'localtime') as hora, " +
 "	   productos.nombre as producto, prod_stock.cantidad, prod_stock.user" +
 "	   FROM prod_stock INNER JOIN productos " +
-"                           ON prod_stock.id = productos.id " +
+"                           ON productos.id  = prod_stock.idProd " +
 "	   WHERE date(prod_stock.fecha,'localtime') BETWEEN \"" + from + "\" AND \"" + to + "\" " +
 "	ORDER BY date(prod_stock.fecha,'localtime'), time(prod_stock.fecha, 'localtime')";        
         

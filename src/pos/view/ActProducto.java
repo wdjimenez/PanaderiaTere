@@ -182,7 +182,8 @@ public class ActProducto extends javax.swing.JDialog {
         p = Producto.find(item.getIdProd());
         
         precio_old = p.getPrecio();
-        precio_new = ((Double)textPrecio.getValue()).floatValue();
+        //precio_new = ((Long)textPrecio.getValue()).floatValue();
+        precio_new = ((Number)textPrecio.getValue()).floatValue();
         //Verificamos que se hayan hecho cambios
         if(textNombre.getText().compareTo(p.getNombre()) != 0 ||
             precio_new != precio_old ||
