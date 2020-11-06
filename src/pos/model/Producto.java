@@ -305,8 +305,9 @@ public class Producto {
             ResultSet rs = st.executeQuery("select productosventa.id_producto, productos.nombre, productos.precio, sum(productosventa.cantidad) FROM " + 
                             " ventas inner join productosventa ON ventas.id = productosventa.id_venta " + 
                             " inner join productos on productosventa.id_producto = productos.id " +
-                            "WHERE date(ventas.fecha,'localtime') BETWEEN '" + aMonthAgo.format(formatter) + "' AND '" + today.format(formatter)  + 
-                            "' GROUP BY id_producto ORDER BY SUM(cantidad) DESC LIMIT 5" );
+                            "WHERE date(ventas.fecha,'localtime') BETWEEN '" + aMonthAgo.format(formatter) + "' AND '" + today.format(formatter)  + "' AND " +
+                            "productos.inactivo = '0' " + 
+                            " GROUP BY id_producto ORDER BY SUM(cantidad) DESC LIMIT 5" );
             while (rs.next()) {
                 Producto producto = new Producto();
                 producto.setId(rs.getInt("id_producto"));

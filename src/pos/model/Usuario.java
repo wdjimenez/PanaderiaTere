@@ -161,5 +161,28 @@ public class Usuario {
             return false;
         }
     }
+    
+    public static List<Usuario> allUsers() {
+        conn = DataBase.getConnection();
+        List<Usuario> usuarios = new ArrayList<>();
+        try {
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM usuarios WHERE user != 'admin' ORDER BY user");
+            while (rs.next()) {
+                Usuario user = new Usuario(rs.getString("user"),rs.getString("pass"),rs.getString("salt"),rs.getString("nombre"), rs.getString("apellido"), rs.getInt("admin"));
+                //Usuario(String user, String pass, String salt, String nombre, String apellido, int admin)
+                
+//                producto.setId(rs.getInt("id"));
+//                producto.setNombre(rs.getString("nombre"));
+//                producto.setPrecio(rs.getFloat("precio"));
+//                producto.setStock(rs.getInt("stock"));
+//                producto.setInactivo(rs.getInt("inactivo"));
+                usuarios.add(user);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return usuarios;
+    }
 
 }

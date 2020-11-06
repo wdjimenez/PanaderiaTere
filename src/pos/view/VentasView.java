@@ -56,48 +56,46 @@ public class VentasView extends javax.swing.JFrame {
 
     private TextAutoCompleter ac;
     private Font default_font = new Font("Tahoma", Font.BOLD, 18);
-    
+
     private static final String strProducto = "Producto";
     private static final String strEfectivo = "Efectivo";
     private static final String strCambio = "Cambio";
     private static final String strCantidad = "Cantidad";
-    
+
     private static final int VENTA = 0;
     private static final int EFECTIVO = 1;
     private static final int CAMBIO = 2;
     private static final int CANTIDAD = 3;
-    
+
     private Producto pan_selected;
-    
+
     private Usuario sesion;
-            
+
     private int estado; //EN espera de producto
-    
+
 //    private String colorContent = "#DFDCE3";
 //    private String colorElement = "#85AFC9"; //"#D2D904";
-    
-    
-    JButton []arrPanes = new JButton[5];//arreglo de botones
-    
+    JButton[] arrPanes = new JButton[5];//arreglo de botones
+
     List<Producto> masvendidos;
-    
+
     /**
      * Creates new form PanaderiaTere
      */
     public VentasView(Usuario s) {
         sesion = s;
-        
+
         initComponents();
         initAutoCompleter();
         initProductsTable();
         initPanelBotones();
-        
+
         labelUsuario.setText(sesion.getNombre() + " " + sesion.getApellido());
-        
+
         //getContentPane().setBackground(new java.awt.Color(242,242,242));
         getContentPane().setBackground(Color.decode(Config.ColorContent));
-        
-        if(!sesion.isAdmin()){
+
+        if (!sesion.isAdmin()) {
             menuItemNuevo.setEnabled(false);
             menuItemEditar.setEnabled(false);
             menuItemEliminar.setEnabled(false);
@@ -105,10 +103,11 @@ public class VentasView extends javax.swing.JFrame {
             menuItemCUser.setEnabled(false);
             menuItemModUser.setEnabled(false);
             menuItemRepMov.setEnabled(false);
+            menuItemDesactivar.setEnabled(false);
         }
-        
+
         panelPanes.setBackground(Color.decode(Config.ColorContent));
-        
+
         btnRemover.setBackground(Color.decode(Config.ColorElement));
         btnRemover.setForeground(Color.decode(Config.ColorText));
         btn_adddesc.setBackground(Color.decode(Config.ColorElement));
@@ -119,81 +118,41 @@ public class VentasView extends javax.swing.JFrame {
         btnCobrar.setForeground(Color.decode(Config.ColorText));
         btnLimpiar.setBackground(Color.decode(Config.ColorElement));
         btnLimpiar.setForeground(Color.decode(Config.ColorText));
-        
-        
+
         textTotal.setValue(new Double(0));
         textDescuento.setValue(new Double(0));
-        
+
         tableItems.getTableHeader().setFont(default_font);
         tableItems.setFont(default_font);
-        
-        calculaTotalVenta();        
-        
+
+        calculaTotalVenta();
+
         setLocationRelativeTo(null);
-        
+
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
                 new PrincipalView().setVisible(true);
             }
         });
-        
-        
-//        //Acceso directo para Boton Cobrar
-//        Action cobrarAction = new AbstractAction("Cobrar"){
-//            @Override
-//            public void actionPerformed(ActionEvent e){
-//                cobrarVenta();
-//            }
-//        };
-//        
-//        btnCobrar.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F8"), "Cobrar");
-//        
-//        btnCobrar.getActionMap().put("Cobrar", cobrarAction);
-//        
-//        //Acceso directo para Boton Remover producto
-//        Action removerAction = new AbstractAction("Remover"){
-//            @Override
-//            public void actionPerformed(ActionEvent e){
-//                removerProducto();
-//            }
-//        };
-//        
-//        btnRemover.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F5"), "Remover");
-//        
-//        btnRemover.getActionMap().put("Remover", removerAction);
-//        
-//        
-//        //Acceso directo para Reinicar Venta
-//        Action reiniciarAction = new AbstractAction("Reiniciar"){
-//            @Override
-//            public void actionPerformed(ActionEvent e){
-//                reiniciarVenta(1);  
-//            }
-//        };
-//        
-//        btnLimpiar.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F6"), "Reiniciar");
-//        
-//        btnLimpiar.getActionMap().put("Reiniciar", reiniciarAction);
-        
-        
+
+
         estado = VENTA;
-                       
+
     }
-    
-    private void initAutoCompleter(){
+
+    private void initAutoCompleter() {
         ac = new TextAutoCompleter(textBuscar, Producto.all().toArray());
         ac.setMode(0);
-        
-        
+
 //        Producto.all().forEach((producto) -> {
 //            ac.addItem(producto);
 //        });
     }
-    
-    public void refreshAutoCompleter(){
+
+    public void refreshAutoCompleter() {
         this.ac.removeAllItems();
-        
+
         Producto.all().forEach((producto) -> {
             System.out.println("Producto " + producto.getNombre() + " Precio " + producto.getPrecio());
             this.ac.addItem(producto);
@@ -213,37 +172,38 @@ public class VentasView extends javax.swing.JFrame {
 //            });
 //        });
     }
-    
-    private void calculaTotalVenta(){
+
+    private void calculaTotalVenta() {
         DefaultTableModel dtm = (DefaultTableModel) tableItems.getModel();
         int nRow = dtm.getRowCount();
         float total = 0, descuento = 0;
-        
+
         try {
-            for (int row=0; row<tableItems.getRowCount(); row++) {
+            for (int row = 0; row < tableItems.getRowCount(); row++) {
                 int rowHeight = tableItems.getRowHeight();
- 
-                for (int column=0; column<tableItems.getColumnCount(); column++) {
+
+                for (int column = 0; column < tableItems.getColumnCount(); column++) {
                     Component comp = tableItems.prepareRenderer(tableItems.getCellRenderer(row, column), row, column);
                     rowHeight = Math.max(rowHeight, comp.getPreferredSize().height);
                 }
- 
+
                 tableItems.setRowHeight(row, rowHeight);
             }
-        } catch(ClassCastException e) { }
-       
-        for (int i = 0 ; i < nRow ; i++){
+        } catch (ClassCastException e) {
+        }
+
+        for (int i = 0; i < nRow; i++) {
 //            for (int j = 0 ; j < nCol ; j++){
 //                item = (ItemVentas)dtm.getValueAt(i,j);
-                total += (float)dtm.getValueAt(i,3);
+            total += (float) dtm.getValueAt(i, 3);
 //            }
         }
         //Restamos el valor del descuento
-        descuento = ((Double)textDescuento.getValue()).floatValue();
+        descuento = ((Double) textDescuento.getValue()).floatValue();
         total = total - descuento;
-        
+
         textTotal.setValue(new Double(total));
-        
+
     }
 
     /**
@@ -274,6 +234,7 @@ public class VentasView extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
         menuItemNuevo = new javax.swing.JMenuItem();
         menuItemEditar = new javax.swing.JMenuItem();
+        menuItemDesactivar = new javax.swing.JMenuItem();
         menuItemEliminar = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenuItem7 = new javax.swing.JMenuItem();
@@ -423,6 +384,16 @@ public class VentasView extends javax.swing.JFrame {
             }
         });
         jMenu2.add(menuItemEditar);
+
+        menuItemDesactivar.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        menuItemDesactivar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/edit.png"))); // NOI18N
+        menuItemDesactivar.setText("Desactivar");
+        menuItemDesactivar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemDesactivarActionPerformed(evt);
+            }
+        });
+        jMenu2.add(menuItemDesactivar);
 
         menuItemEliminar.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         menuItemEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/trash_can.png"))); // NOI18N
@@ -580,7 +551,7 @@ public class VentasView extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(panelPanes, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 333, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -589,7 +560,7 @@ public class VentasView extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(textTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCobrar)
                     .addComponent(btnLimpiar)
@@ -603,109 +574,91 @@ public class VentasView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void menuItemNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemNuevoActionPerformed
-        
+
 //        boolean valido = autenticarUsuario();
 //        
 //        if (valido) {
-            ProductosView vProd = new ProductosView(this, true);
-            vProd.setVisible(true);
+        ProductosView vProd = new ProductosView(this, true);
+        vProd.setVisible(true);
 
-            vProd.addWindowListener(new WindowAdapter() {
-                public void windowClosed(WindowEvent e){
-                    System.out.println("jdialog window closed event received Close 1");
+        vProd.addWindowListener(new WindowAdapter() {
+            public void windowClosed(WindowEvent e) {
+                System.out.println("jdialog window closed event received Close 1");
 
-                    refreshAutoCompleter();
+                refreshAutoCompleter();
 
-                }
+            }
 
-                public void windowClosing(WindowEvent e){
-                    System.out.println("jdialog window closing event received Close 2");
-                }
-            });            
+            public void windowClosing(WindowEvent e) {
+                System.out.println("jdialog window closing event received Close 2");
+            }
+        });
 //        }                              
     }//GEN-LAST:event_menuItemNuevoActionPerformed
 
     private void textBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textBuscarActionPerformed
-        // TODO add your handling code here:
-//        Producto pNuevo;
         
-//        pNuevo = (Producto)ac.getItemSelected();        
-
-//        if (pNuevo != null) {
-//            try{
-//                agregarProductoVenta(pNuevo);
-//            }catch(ParseException ex){
-//                
-//            };
-//                               
-//        }
-//        
-//        calculaTotalVenta();
-//        textBuscar.setText("");           
         int num_panes;
         double efectivo;
-        
-        switch(estado){
+
+        switch (estado) {
             case VENTA:
-                pan_selected = (Producto)ac.getItemSelected();    
-                
-                if(pan_selected != null)
+                pan_selected = (Producto) ac.getItemSelected();
+
+                if (pan_selected != null) {
                     estado = CANTIDAD;
-//                else{
-//                    textBuscar.setText("");
-//                    ac = new TextAutoCompleter(textBuscar, Producto.all().toArray());
-//                    ac.setMode(-1);
-//                }
-                    
+                }
+
                 break;
             case CANTIDAD:
                 //recuperamos la cantidad de panes     
 
-                try{
+                try {
                     num_panes = Integer.parseInt(textBuscar.getText());
-                    
+
                     agregarProductoVenta(pan_selected, num_panes);
-                    
+
                     calculaTotalVenta();
-                    
+
                     //Liberamos el pan agregado
                     pan_selected = null;
                     //Cambiamos el estatus de la pantalla
                     estado = VENTA;
-                }catch(NumberFormatException ex){
-                    JOptionPane.showMessageDialog(this, "Solo se aceptan valores numericos", "Mensaje",JOptionPane.ERROR_MESSAGE);
-                }catch (ParseException ex) {
-                    JOptionPane.showMessageDialog(this, "Se presento un problema para agregar el producto", "Mensaje",JOptionPane.ERROR_MESSAGE);
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "Solo se aceptan valores numericos", "Mensaje", JOptionPane.ERROR_MESSAGE);
+                } catch (ParseException ex) {
+                    JOptionPane.showMessageDialog(this, "Se presento un problema para agregar el producto", "Mensaje", JOptionPane.ERROR_MESSAGE);
                 }
                 break;
             case EFECTIVO:
-                try{
+                try {
                     efectivo = Float.parseFloat(textBuscar.getText());
-                    
-                    if(efectivo >= (Double)textTotal.getValue())
+
+                    if (efectivo >= (Double) textTotal.getValue()) {
                         estado = CAMBIO;
-                    else
-                        JOptionPane.showMessageDialog(this, "El efectivo es menor al total de la venta", "Mensaje",JOptionPane.ERROR_MESSAGE);
-                }catch(NumberFormatException ex){
-                    JOptionPane.showMessageDialog(this, "Solo se aceptan valores numericos", "Mensaje",JOptionPane.ERROR_MESSAGE);
-                }                
-                
+                    } else {
+                        JOptionPane.showMessageDialog(this, "El efectivo es menor al total de la venta", "Mensaje", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "Solo se aceptan valores numericos", "Mensaje", JOptionPane.ERROR_MESSAGE);
+                }
+
                 break;
-            
+
             case CAMBIO:
                 reiniciarVenta(0);
                 estado = VENTA;
                 break;
         }
-                
+
         actualizaElementosPantalla(estado);
 
     }//GEN-LAST:event_textBuscarActionPerformed
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
         // TODO add your handling code here:        
-        reiniciarVenta(1);                
-        
+        reiniciarVenta(1);
+
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
     private void textTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textTotalActionPerformed
@@ -713,9 +666,9 @@ public class VentasView extends javax.swing.JFrame {
     }//GEN-LAST:event_textTotalActionPerformed
 
     private void btnCobrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCobrarActionPerformed
-        
-        cobrarVenta();        
-          
+
+        cobrarVenta();
+
     }//GEN-LAST:event_btnCobrarActionPerformed
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
@@ -733,79 +686,76 @@ public class VentasView extends javax.swing.JFrame {
 //        boolean valido = autenticarUsuario();
 //        
 //        if (valido) {
-            RepVentas rep = new RepVentas();
-            rep.setVisible(true);
+        RepVentas rep = new RepVentas();
+        rep.setVisible(true);
 //        }
     }//GEN-LAST:event_menuItemRepVentasActionPerformed
 
     private void menuItemEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemEditarActionPerformed
-//        boolean valido = autenticarUsuario();
-//        
-//        if (valido) {
-        
-            ActProducto actualizar = new ActProducto(this, true);
-            actualizar.setVisible(true);
 
-            actualizar.addWindowListener(new WindowAdapter() {
-                public void windowClosed(WindowEvent e){
-                    System.out.println("jdialog window closed event received Close 1");
+        ActProducto actualizar = new ActProducto(this, true);
+        actualizar.setVisible(true);
 
-                    refreshAutoCompleter();
+        actualizar.addWindowListener(new WindowAdapter() {
+            public void windowClosed(WindowEvent e) {
+                System.out.println("jdialog window closed event received Close 1");
 
-                }
+                refreshAutoCompleter();
 
-                public void windowClosing(WindowEvent e){
-                    System.out.println("jdialog window closing event received Close 2");
-                }
-            });
-//        }
-        
+            }
+
+            public void windowClosing(WindowEvent e) {
+                System.out.println("jdialog window closing event received Close 2");
+            }
+        });
+
     }//GEN-LAST:event_menuItemEditarActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
 //        boolean valido = autenticarUsuario();
 //        
 //        if (valido) {
-            ActPass nuevopass = new ActPass(this, true, sesion);
-            nuevopass.setVisible(true);
+        ActPass nuevopass = new ActPass(this, true, sesion);
+        nuevopass.setVisible(true);
 //        }
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void btn_adddescActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_adddescActionPerformed
         float descuento = 0;
-        JLabel label = new JLabel();        
-        
+        JLabel label = new JLabel();
+
         label.setFont(default_font);
-        
+
         boolean valido = autenticarUsuario();
-        
+
         if (valido) {
             boolean flag;
-            do{
+            do {
                 flag = true;
-                try{
+                try {
                     label.setText("Descuento");
                     String input = JOptionPane.showInputDialog(this, label);
-                    if (input != null) {                                           
+                    if (input != null) {
                         descuento = Float.parseFloat(input);
 
-                        if(descuento > (Double)textTotal.getValue()){
+                        if (descuento > (Double) textTotal.getValue()) {
                             label.setText("El descuento es mayor al importe total");
                             JOptionPane.showMessageDialog(this, label);
                             flag = false;
-                        }                     
-                    }else
+                        }
+                    } else {
                         flag = true;
-                }catch(NumberFormatException e){
-                    flag = false;                    
+                    }
+                } catch (NumberFormatException e) {
+                    flag = false;
                 }
 
-            }while(!flag);
-            
+            } while (!flag);
+
             textDescuento.setValue(new Double(descuento));
-            
+
             calculaTotalVenta();
-            
+
         }
     }//GEN-LAST:event_btn_adddescActionPerformed
 
@@ -834,14 +784,35 @@ public class VentasView extends javax.swing.JFrame {
     }//GEN-LAST:event_menuItemCUserActionPerformed
 
     private void menuItemModUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemModUserActionPerformed
-//        CrearUsuarioView vUser = new CrearUsuarioView(this, true);//Visualizar
-//        vUser.setVisible(true);
+        ActUsuarios vUser = new ActUsuarios(this, true);//Visualizar
+        vUser.setVisible(true);
+
     }//GEN-LAST:event_menuItemModUserActionPerformed
 
     private void menuItemRepMovActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemRepMovActionPerformed
         RepMovimientosView rep = new RepMovimientosView();
         rep.setVisible(true);
     }//GEN-LAST:event_menuItemRepMovActionPerformed
+
+    private void menuItemDesactivarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemDesactivarActionPerformed
+        
+        DesactivarProductos desProd = new DesactivarProductos(this, true);
+        desProd.setVisible(true);
+
+        desProd.addWindowListener(new WindowAdapter() {
+            public void windowClosed(WindowEvent e) {
+                System.out.println("jdialog window closed event received Close 1");
+
+                refreshAutoCompleter();
+                initPanelBotones();
+
+            }
+
+            public void windowClosing(WindowEvent e) {
+                System.out.println("jdialog window closing event received Close 2");
+            }
+        });
+    }//GEN-LAST:event_menuItemDesactivarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -900,6 +871,7 @@ public class VentasView extends javax.swing.JFrame {
     private javax.swing.JLabel labelAccion;
     private javax.swing.JLabel labelUsuario;
     private javax.swing.JMenuItem menuItemCUser;
+    private javax.swing.JMenuItem menuItemDesactivar;
     private javax.swing.JMenuItem menuItemEditar;
     private javax.swing.JMenuItem menuItemEliminar;
     private javax.swing.JMenuItem menuItemModUser;
@@ -915,110 +887,92 @@ public class VentasView extends javax.swing.JFrame {
 
     private void reiniciarVenta(int confirm) {
         DefaultTableModel modelo = (DefaultTableModel) tableItems.getModel();
-        
+
         int i = modelo.getRowCount();
-        
-        if(confirm == 1){
-            if(i>0){
-                int dialogResult = JOptionPane.showConfirmDialog (null, "¿Desea eliminar todos los productos de esta venta?");
-                
-                if(dialogResult == JOptionPane.YES_OPTION){
+
+        if (confirm == 1) {
+            if (i > 0) {
+                int dialogResult = JOptionPane.showConfirmDialog(null, "¿Desea eliminar todos los productos de esta venta?");
+
+                if (dialogResult == JOptionPane.YES_OPTION) {
                     textTotal.setValue(new Double(0));
                     textDescuento.setValue(new Double(0));
                     modelo.setRowCount(0);
-                }                        
+                }
             }
-        }else{
+        } else {
             textTotal.setValue(new Double(0));
             textDescuento.setValue(new Double(0));
             modelo.setRowCount(0);
         }
-        
+
         calculaTotalVenta();
     }
 
     private void initPanelBotones() {
         Producto p;
         JButton btemp;
-        
+
         //Recuperamos la lista de los más vendidos
         masvendidos = Producto.bestSelled();
-        
+
         //Eliminamos los panes mostrados anteriormente, la última venta puede cambiar el orden
         panelPanes.removeAll();
-        
+        panelPanes.repaint();
+
         //Recuperamos la lista de panes a mostrar en pantalla
         int size = masvendidos.size();
-        
-        for(int i = 0; i < arrPanes.length && i < size ; i++){//ciclo para crear, añadir, establecer propiedades a los botones
+
+        for (int i = 0; i < arrPanes.length && i < size; i++) {//ciclo para crear, añadir, establecer propiedades a los botones
             //Agregamos cada pan al panel
             p = masvendidos.get(i);
-            btemp = new JButton(p.getNombre());
-            btemp.setFont(new Font("Tahoma", Font.BOLD, 12));//(default_font);
-            btemp.setForeground(Color.decode(Config.ColorText));
-            btemp.setBackground(Color.decode(Config.ColorElement));
-            btemp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/bread_32.png"))); 
-            
-            arrPanes[i] = btemp;
-            panelPanes.add(arrPanes[i]);
-            arrPanes[i].setMargin(new Insets(20, 20, 20, 20));
-            
-            arrPanes[i].addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    for(int i = 0; i < arrPanes.length ; i++){
-                        if (arrPanes[i] == evt.getSource()){
-                            
-                            pan_selected = masvendidos.get(i);
-                            estado = CANTIDAD;
-                            actualizaElementosPantalla(estado);
-//                            try{
-//                                agregarProductoVenta(masvendidos.get(i));
-//                                calculaTotalVenta();
-                                
+            if (p != null) {                            
+                btemp = new JButton(p.getNombre());
+                btemp.setFont(new Font("Tahoma", Font.BOLD, 12));//(default_font);
+                btemp.setForeground(Color.decode(Config.ColorText));
+                btemp.setBackground(Color.decode(Config.ColorElement));
+                btemp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/bread_32.png")));
+
+
+                arrPanes[i] = btemp;
+                panelPanes.add(arrPanes[i]);
+                arrPanes[i].setMargin(new Insets(20, 20, 20, 20));
+
+                arrPanes[i].addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        for (int i = 0; i < arrPanes.length; i++) {
+                            if (arrPanes[i] == evt.getSource()) {
+                                pan_selected = masvendidos.get(i);
+                                estado = CANTIDAD;
+                                actualizaElementosPantalla(estado);
                                 textBuscar.grabFocus();
                                 break;
-//                            }catch(ParseException ex){
-//                                
-//                            }                        
-                            
+
+                            }
                         }
+
                     }
-                    
-                }
-            });            
+                });
+            }
         }//fin ciclo
-                
+
     }
 
     private void agregarProductoVenta(Producto prod, int cantidad) throws ParseException {
-        Producto pOld;        
-        JLabel label = new JLabel();        
+        Producto pOld;
+        JLabel label = new JLabel();
         JFormattedTextField inputNum;
         ItemVentas item;
 //        int nPanes = 0, 
         int consumo = 0, index = -1, stock;
-        boolean flag;       
-        
+        boolean flag;
+
         inputNum = new javax.swing.JFormattedTextField();
         inputNum.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
-        
-        
+
         inputNum.setFont(default_font);
         inputNum.setFocusable(true);
         label.setFont(default_font);
-              
-//        do{
-//            flag = false;
-//            
-//            try{
-//                label.setText("¿Cuántos panes desea agregar?");            
-//                nPanes = Integer.parseInt(JOptionPane.showInputDialog(this, label));            
-//            }catch(NumberFormatException e){
-//                flag = true;
-//
-//            }      
-//        }while(flag);
-        
 
         DefaultTableModel modelo = (DefaultTableModel) tableItems.getModel();
 
@@ -1027,21 +981,20 @@ public class VentasView extends javax.swing.JFrame {
 
 //        consumo = nPanes;
         consumo = cantidad;
-        for (int i = 0 ; i < nRow ; i++){
-            pOld = (Producto)modelo.getValueAt(i,0);
+        for (int i = 0; i < nRow; i++) {
+            pOld = (Producto) modelo.getValueAt(i, 0);
 
             System.out.println("Producto anterior " + pOld.getId() + " " + pOld.getNombre());
             System.out.println("Producto nuevo " + prod.getId() + " " + prod.getNombre());
-            if (pOld.getId() == prod.getId()){//Se trata del mismo producto, incrementamos el stock
+            if (pOld.getId() == prod.getId()) {//Se trata del mismo producto, incrementamos el stock
                 index = i;
-                consumo += (int)modelo.getValueAt(i,2);
+                consumo += (int) modelo.getValueAt(i, 2);
 //                    modelo.setValueAt(consumo, nRow, 2);
             }
         }
 
         System.out.println("Consumo total " + consumo);
         System.out.println("Indice " + index);
-
 
         //Verificamos que haya suficiente consumo
         stock = Producto.getRealStock(prod.getId());
@@ -1050,62 +1003,43 @@ public class VentasView extends javax.swing.JFrame {
 
         if (stock < consumo) {
             label.setText("No hay suficiente stock de este producto");
-            JOptionPane.showMessageDialog(null, label);       
+            JOptionPane.showMessageDialog(null, label);
             return;
         }
 
-        if(index >= 0){//Actualizamos un elemento ya existente
+        if (index >= 0) {//Actualizamos un elemento ya existente
 
             modelo.setValueAt(consumo, index, 2);
 
             modelo.setValueAt(consumo * prod.getPrecio(), index, 3);
 
-        }else{//Nuevo elemento                 
+        } else {//Nuevo elemento                 
 
             item = new ItemVentas(prod, consumo);
 
             modelo.addRow(new Object[]{
-                 item.getProd(),
-                 item.getPrecio(),
-                 item.getCantidad(),
-                 item.getImporte()           
-            }); 
+                item.getProd(),
+                item.getPrecio(),
+                item.getCantidad(),
+                item.getImporte()
+            });
         }
     }
 
-    private boolean autenticarUsuario() { 
+    private boolean autenticarUsuario() {
 //        JLabel label = new JLabel();
         //Usuario user = Usuario.find("Admin");
-        
+
         AutenticarAdminView autenticar = new AutenticarAdminView(this, true);
-        
+
         autenticar.setVisible(true);
-        
-        if (autenticar.isAdmin()) 
+
+        if (autenticar.isAdmin()) {
             return true;
-        else
+        } else {
             return false;
-        
-        
-//        JPasswordField pf = new JPasswordField();
-//        String myPass;
-//        int okCxl;
-//        
-//        pf.setFont(default_font);        
-//        
-//        do{      
-//            okCxl = JOptionPane.showConfirmDialog(null, pf, "Contraseña", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-//            myPass = String.valueOf(pf.getPassword());
-//            if (okCxl == JOptionPane.OK_OPTION && PasswordUtils.verifyUserPassword(myPass, sesion.getPass(), sesion.getSalt())){                
-//                return true;
-//            }else if(okCxl == JOptionPane.CANCEL_OPTION)
-//                return false;
-//            else{
-//                label.setText("Contraseña incorrecta, intente nuevamente");
-//                JOptionPane.showMessageDialog(this, label);
-//            }
-//            
-//        }while(true);
+        }
+
     }
 
     private void cobrarVenta() {
@@ -1114,89 +1048,57 @@ public class VentasView extends javax.swing.JFrame {
         Producto p = null;
         List<ItemVentas> items = new ArrayList<>();
         ItemVentas iv = null;
-        
+
         JLabel label = new JLabel();
 
         label.setFont(default_font);
-                
-        int i = modelo.getRowCount();
-        
-        if(i>0){
+
+        //int i = modelo.getRowCount();
+        if (nRow > 0) {
             //Recuperamos la lista de panes para mandarlos a la BD
-            for (int x = 0 ; x < nRow ; x++){
-                p = (Producto)modelo.getValueAt(x, 0);
-                cantidad = (int)modelo.getValueAt(x, 2);
+            for (int x = 0; x < nRow; x++) {
+                p = (Producto) modelo.getValueAt(x, 0);
+                cantidad = (int) modelo.getValueAt(x, 2);
                 iv = new ItemVentas(p, cantidad);
                 items.add(iv);
             }
-            
+
             //Si la venta se genera exitosamente procedemos a realizar el cobro
-            if(Ventas.generaVenta(((Double)textTotal.getValue()).floatValue(), ((Double)textDescuento.getValue()).floatValue(), sesion.getUser(), items)){
+            if (Ventas.generaVenta(((Double) textTotal.getValue()).floatValue(), ((Double) textDescuento.getValue()).floatValue(), sesion.getUser(), items)) {
                 estado = EFECTIVO;
-                
+
                 actualizaElementosPantalla(estado);
-                
-//                boolean flag;
-//                double cambio;
-//                do{
-//                    flag = true;
-//                    try{
-//                        label.setText("Efectivo");
-//                        
-//                        float efectivo = Float.parseFloat(JOptionPane.showInputDialog(this, label));
-//                                                                        
-//                        cambio = efectivo - (Double)textTotal.getValue();
-//                        
-//                        if(cambio < 0){          
-//                            label.setText("El efectivo es menor al monto total");
-//                            JOptionPane.showMessageDialog(this, label);
-//                            flag = false;
-//                        }else{
-//                            label.setText("Cambio $" + cambio);
-//                            JOptionPane.showMessageDialog(this, label);
-//                        }
-//                        
-//                    }catch(NumberFormatException e){
-//                        flag = false;
-//                    }
-//                    
-//                }while(!flag);
-//                
-//                //JOptionPane.showMessageDialog(null, "Venta generada");
-//                
-//                reiniciarVenta(0);
-//                initPanelBotones();
-                
-            }else{
+
+            } else {
                 label.setText("Se presento un problema para generar la venta");
                 JOptionPane.showMessageDialog(null, label);
             }
-        }else{
+        } else {
             label.setText("No se ha agregado ningun producto");
             JOptionPane.showMessageDialog(null, label);
-        }      
+        }
     }
 
     private void removerProducto() {
-        JLabel label = new JLabel();        
-                
+        JLabel label = new JLabel();
+
         int i = tableItems.getSelectedRow();
         DefaultTableModel modelo = (DefaultTableModel) tableItems.getModel();
-        
+
         label.setFont(default_font);
-        
-        if (i >= 0){
+
+        if (i >= 0) {
             modelo.removeRow(i);
-        }else{
+        } else {
             label.setText("No se selecciono ningun registro para eliminar");
             JOptionPane.showMessageDialog(null, label);
         }
-        
+
         calculaTotalVenta();
     }
 
     private void actualizaElementosPantalla(int estado) {
-        switch(estado){
+        switch (estado) {
             case VENTA:
                 labelAccion.setText(strProducto);
                 tableItems.setEnabled(true);
@@ -1205,13 +1107,13 @@ public class VentasView extends javax.swing.JFrame {
                 btn_remdesc.setEnabled(true);
                 btnLimpiar.setEnabled(true);
                 btnCobrar.setEnabled(true);
-                                
+
                 textBuscar.setText("");
-                
+
                 initAutoCompleter();
-                                
+
                 initPanelBotones();
-                
+
                 break;
             case CANTIDAD:
                 labelAccion.setText(strCantidad);
@@ -1222,21 +1124,21 @@ public class VentasView extends javax.swing.JFrame {
                 btn_remdesc.setEnabled(false);
                 btnLimpiar.setEnabled(false);
                 btnCobrar.setEnabled(false);
-                
+
                 //Removemos los elementos del buscador
                 ac.removeAllItems();
-                
+
                 //Removemos todos los panes del panel
                 panelPanes.removeAll();
 
                 //Limpiamos el campo de texto
                 textBuscar.setText("");
-                                
+
                 //Desactivamos el panel de panes
                 panelPanes.setEnabled(false);
-                
+
                 break;
-                
+
             case EFECTIVO:
                 labelAccion.setText(strEfectivo);
                 //Deshabilitamos los elementos en pantalla
@@ -1246,19 +1148,19 @@ public class VentasView extends javax.swing.JFrame {
                 btn_remdesc.setEnabled(false);
                 btnLimpiar.setEnabled(false);
                 btnCobrar.setEnabled(false);
-                
+
                 //Removemos los elementos del buscador
                 ac.removeAllItems();
-                
+
                 //Removemos todos los panes del panel
                 panelPanes.removeAll();
 
                 //Limpiamos el campo de texto
                 textBuscar.setText("");
-                                
+
                 //Desactivamos el panel de panes
                 panelPanes.setEnabled(false);
-                
+
                 break;
             case CAMBIO:
                 labelAccion.setText(strCambio);
@@ -1269,32 +1171,32 @@ public class VentasView extends javax.swing.JFrame {
                 btn_remdesc.setEnabled(false);
                 btnLimpiar.setEnabled(false);
                 btnCobrar.setEnabled(false);
-                
+
                 //Removemos los elementos del buscador
                 ac.removeAllItems();
-                
+
                 //Removemos todos los panes del panel
                 panelPanes.removeAll();
-                
+
                 //Desactivamos el panel de panes
-                panelPanes.setEnabled(false);                
+                panelPanes.setEnabled(false);
 
 //                //Limpiamos el campo de texto
 //                textBuscar.setText("");
                 textBuscar.setText(Float.toString(calculaCambio()));
 
-                                
                 break;
-            default: break;
-                
+            default:
+                break;
+
         }
     }
 
     private float calculaCambio() {
         double efectivo, total;
-        
+
         efectivo = Double.parseDouble(textBuscar.getText());
-        total = (Double)textTotal.getValue();
+        total = (Double) textTotal.getValue();
 //        System.out.println("Efectivo: " + Double.toString(efectivo));
 //        System.out.println("Total: " + Double.toString(total));
         return (float) (efectivo - total);
