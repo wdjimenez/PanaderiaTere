@@ -97,6 +97,7 @@ public class Config {
                 configDir = params.get("home") + params.get("separador") + "panaderia";
                 break;
         }
+        System.out.println("Directorio configuración: " + configDir);
     }
 
     public boolean isCompatible() {
