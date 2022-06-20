@@ -104,19 +104,26 @@ public class Ventas {
     
     
     
-    public static boolean generaVenta(float total, float descuento, String user, List<ItemVentas> items){
+    public static int generaVenta(float total, float descuento, String user, List<ItemVentas> items){
         ResultSet rs = null;
         PreparedStatement pstmt1 = null, pstmt2 = null, pstmt3 = null;
-        int ventaId, stock;
+        int ventaId, stock;        
+        
+        //Comando para insertar la venta
         String sqlVenta = "INSERT INTO ventas(fecha, total, descuento, user) VALUES(julianday('now'),?, ?, ?)";
+        
+        //Comando para insertar los elementos de la venta
         String sqlItem = "INSERT INTO productosventa(id_venta, id_producto, cantidad, precio, importe) VALUES(?,?,?,?,?)";
+        
+        //COmandos para actualziar el stock
         String sqlStock = "SELECT stock FROM productos WHERE id = ?";
         String sqlUpdStock = "UPDATE productos SET stock = ? WHERE id = ?";
         
         try{
+            //Recuperamos la conexión de la BD
             conn = DataBase.getConnection();
             if(conn == null)
-                return false;
+                return -1;
             
             conn.setAutoCommit(false);
             
@@ -158,7 +165,7 @@ public class Ventas {
                 if (stock < 0) {
                     conn.rollback();
 //                    conn.close();
-                    return false;
+                    return -1;
                 }                
                 
                 //Consumimos el stock
@@ -181,7 +188,7 @@ public class Ventas {
                 
                 if(rowAffected != 1){//No se agrego el producto
                     conn.rollback();
-                    return false;
+                    return -1;
                 }
                     
             }
@@ -199,7 +206,7 @@ public class Ventas {
             }
             System.out.println(e1.getMessage());
             
-            return false;
+            return -1;
         }finally {
             try {
                 if (rs != null) {
@@ -208,18 +215,14 @@ public class Ventas {
                 if (pstmt1 != null) {
                     pstmt1.close();
                 }
-
-//                if (conn != null) {
-//                    conn.close();
-//                }
                 
             } catch (SQLException e3) {
                 System.out.println(e3.getMessage());
-                return false;
+                return -1;
             }
         }
         
-        return true;
+        return ventaId;
         
     }
     

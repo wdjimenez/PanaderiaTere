@@ -5,48 +5,26 @@
  */
 package pos.view;
 
-import com.mxrck.autocompleter.AutoCompleterCallback;
 import com.mxrck.autocompleter.TextAutoCompleter;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Image;
 import java.awt.Insets;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.InputMap;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.MaskFormatter;
-import jiconfont.icons.font_awesome.FontAwesome;
 import pos.model.Producto;
 import pos.model.ItemVentas;
-import pos.model.PasswordUtils;
 import pos.model.Usuario;
 import pos.model.Ventas;
 import pos.util.Config;
-import pos.util.IconUtil;
 
 /**
  *
@@ -979,13 +957,12 @@ public class VentasView extends javax.swing.JFrame {
         //Verificamos que haya Stock disponible
         int nRow = modelo.getRowCount();
 
-//        consumo = nPanes;
         consumo = cantidad;
         for (int i = 0; i < nRow; i++) {
             pOld = (Producto) modelo.getValueAt(i, 0);
 
-            System.out.println("Producto anterior " + pOld.getId() + " " + pOld.getNombre());
-            System.out.println("Producto nuevo " + prod.getId() + " " + prod.getNombre());
+//            System.out.println("Producto anterior " + pOld.getId() + " " + pOld.getNombre());
+//            System.out.println("Producto nuevo " + prod.getId() + " " + prod.getNombre());
             if (pOld.getId() == prod.getId()) {//Se trata del mismo producto, incrementamos el stock
                 index = i;
                 consumo += (int) modelo.getValueAt(i, 2);
@@ -1053,8 +1030,7 @@ public class VentasView extends javax.swing.JFrame {
 
         label.setFont(default_font);
 
-        //int i = modelo.getRowCount();
-        if (nRow > 0) {
+        if (nRow > 0) { //Si la cantidad de elementos es mayor a 0
             //Recuperamos la lista de panes para mandarlos a la BD
             for (int x = 0; x < nRow; x++) {
                 p = (Producto) modelo.getValueAt(x, 0);
@@ -1064,9 +1040,8 @@ public class VentasView extends javax.swing.JFrame {
             }
 
             //Si la venta se genera exitosamente procedemos a realizar el cobro
-            if (Ventas.generaVenta(((Double) textTotal.getValue()).floatValue(), ((Double) textDescuento.getValue()).floatValue(), sesion.getUser(), items)) {
+            if (Ventas.generaVenta(((Double) textTotal.getValue()).floatValue(), ((Double) textDescuento.getValue()).floatValue(), sesion.getUser(), items) > 0) {
                 estado = EFECTIVO;
-
                 actualizaElementosPantalla(estado);
 
             } else {
@@ -1107,6 +1082,7 @@ public class VentasView extends javax.swing.JFrame {
                 btn_remdesc.setEnabled(true);
                 btnLimpiar.setEnabled(true);
                 btnCobrar.setEnabled(true);
+                textBuscar.setEditable(true);
 
                 textBuscar.setText("");
 
@@ -1124,6 +1100,7 @@ public class VentasView extends javax.swing.JFrame {
                 btn_remdesc.setEnabled(false);
                 btnLimpiar.setEnabled(false);
                 btnCobrar.setEnabled(false);
+                textBuscar.setEditable(true);
 
                 //Removemos los elementos del buscador
                 ac.removeAllItems();
@@ -1148,6 +1125,8 @@ public class VentasView extends javax.swing.JFrame {
                 btn_remdesc.setEnabled(false);
                 btnLimpiar.setEnabled(false);
                 btnCobrar.setEnabled(false);
+                textBuscar.setEditable(true);
+                
 
                 //Removemos los elementos del buscador
                 ac.removeAllItems();
@@ -1171,6 +1150,7 @@ public class VentasView extends javax.swing.JFrame {
                 btn_remdesc.setEnabled(false);
                 btnLimpiar.setEnabled(false);
                 btnCobrar.setEnabled(false);
+                textBuscar.setEditable(false);
 
                 //Removemos los elementos del buscador
                 ac.removeAllItems();
