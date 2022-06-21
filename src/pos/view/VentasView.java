@@ -40,6 +40,7 @@ public class VentasView extends javax.swing.JFrame {
     private static final String strCambio = "Cambio";
     private static final String strCantidad = "Cantidad";
 
+    //Estados del campo de captura
     private static final int VENTA = 0;
     private static final int EFECTIVO = 1;
     private static final int CAMBIO = 2;
@@ -129,26 +130,18 @@ public class VentasView extends javax.swing.JFrame {
     }
 
     public void refreshAutoCompleter() {
+        //Refresca la lista de elementos que aparecen en el campo de texto
+        
         this.ac.removeAllItems();
 
         Producto.all().forEach((producto) -> {
-            System.out.println("Producto " + producto.getNombre() + " Precio " + producto.getPrecio());
+            //System.out.println("Producto " + producto.getNombre() + " Precio " + producto.getPrecio());
             this.ac.addItem(producto);
         });
     }
 
     private void initProductsTable() {
-//        DefaultTableModel modelo = (DefaultTableModel) tableItems.getModel();
-//        tableItems.getColumn("Id").setMaxWidth(50);
-//        // Nota: Vaciar tabla antes de insertar renglones
-//        Producto.all().forEach((producto) -> {
-//            modelo.addRow(new Object[]{
-//                producto.getId(),
-//                producto.getNombre(),
-//                producto.getPrecio(),
-//                producto.getStock()
-//            });
-//        });
+
     }
 
     private void calculaTotalVenta() {
@@ -170,12 +163,9 @@ public class VentasView extends javax.swing.JFrame {
         } catch (ClassCastException e) {
         }
 
-        for (int i = 0; i < nRow; i++) {
-//            for (int j = 0 ; j < nCol ; j++){
-//                item = (ItemVentas)dtm.getValueAt(i,j);
+        for (int i = 0; i < nRow; i++) 
             total += (float) dtm.getValueAt(i, 3);
-//            }
-        }
+        
         //Restamos el valor del descuento
         descuento = ((Double) textDescuento.getValue()).floatValue();
         total = total - descuento;
@@ -560,6 +550,7 @@ public class VentasView extends javax.swing.JFrame {
         vProd.setVisible(true);
 
         vProd.addWindowListener(new WindowAdapter() {
+            @Override
             public void windowClosed(WindowEvent e) {
                 System.out.println("jdialog window closed event received Close 1");
 
@@ -567,6 +558,7 @@ public class VentasView extends javax.swing.JFrame {
 
             }
 
+            @Override
             public void windowClosing(WindowEvent e) {
                 System.out.println("jdialog window closing event received Close 2");
             }
