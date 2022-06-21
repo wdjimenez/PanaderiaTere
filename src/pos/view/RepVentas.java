@@ -33,7 +33,7 @@ public class RepVentas extends javax.swing.JFrame {
      * Creates new form RepVentas2
      */
     
-    private Font default_font = new Font("Tahoma", Font.BOLD, 18);
+    private Font default_font = new Font("Roboto", Font.BOLD, 18);
     
     public RepVentas() {
         initComponents();          

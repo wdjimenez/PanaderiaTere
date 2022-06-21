@@ -33,7 +33,7 @@ import pos.util.DataBase;
  */
 public class RepMovimientosView extends javax.swing.JFrame {
 
-    private Font default_font = new Font("Tahoma", Font.BOLD, 18);
+    private Font default_font = new Font("Roboto", Font.BOLD, 18);
     
     /**
      * Creates new form RepMovimientosView
@@ -77,7 +77,7 @@ public class RepMovimientosView extends javax.swing.JFrame {
 
         dateTo.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
-        bBuscar.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        bBuscar.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         bBuscar.setText("Buscar");
         bBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -85,7 +85,7 @@ public class RepMovimientosView extends javax.swing.JFrame {
             }
         });
 
-        tableReporte.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        tableReporte.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         tableReporte.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -122,7 +122,7 @@ public class RepMovimientosView extends javax.swing.JFrame {
                 .addComponent(dateTo, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(bBuscar)
-                .addContainerGap(136, Short.MAX_VALUE))
+                .addContainerGap(139, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1)

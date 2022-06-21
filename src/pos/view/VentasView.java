@@ -9,6 +9,7 @@ import com.mxrck.autocompleter.TextAutoCompleter;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -33,7 +34,7 @@ import pos.util.Config;
 public class VentasView extends javax.swing.JFrame {
 
     private TextAutoCompleter ac;
-    private Font default_font = new Font("Tahoma", Font.BOLD, 18);
+    private Font default_font = new Font("Roboto", Font.BOLD, 18);
 
     private static final String strProducto = "Producto";
     private static final String strEfectivo = "Efectivo";
@@ -219,9 +220,10 @@ public class VentasView extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Panaderia Tere");
-        setBackground(new java.awt.Color(242, 242, 242));
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        setLocationByPlatform(true);
 
-        textBuscar.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        textBuscar.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         textBuscar.setToolTipText("Introduzca el producto aquí");
         textBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -229,7 +231,7 @@ public class VentasView extends javax.swing.JFrame {
             }
         });
 
-        tableItems.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        tableItems.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         tableItems.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -249,7 +251,7 @@ public class VentasView extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tableItems);
 
         btnCobrar.setBackground(new java.awt.Color(114, 151, 166));
-        btnCobrar.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btnCobrar.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         btnCobrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/currency_dollar_sign.png"))); // NOI18N
         btnCobrar.setText("Cobrar");
         btnCobrar.setToolTipText("Genera la venta");
@@ -260,7 +262,7 @@ public class VentasView extends javax.swing.JFrame {
         });
 
         btnLimpiar.setBackground(new java.awt.Color(114, 151, 166));
-        btnLimpiar.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btnLimpiar.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         btnLimpiar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/reload.png"))); // NOI18N
         btnLimpiar.setText("Reiniciar venta");
         btnLimpiar.setToolTipText("Borra la lista de productos");
@@ -270,7 +272,7 @@ public class VentasView extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Roboto", 1, 24)); // NOI18N
         jLabel1.setText("Total");
 
         textTotal.setEditable(false);
@@ -284,7 +286,7 @@ public class VentasView extends javax.swing.JFrame {
         });
 
         btnRemover.setBackground(new java.awt.Color(114, 151, 166));
-        btnRemover.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btnRemover.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         btnRemover.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/delete.png"))); // NOI18N
         btnRemover.setText("Producto");
         btnRemover.setToolTipText("Remueve el producto seleccionado");
@@ -294,18 +296,18 @@ public class VentasView extends javax.swing.JFrame {
             }
         });
 
-        labelAccion.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        labelAccion.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         labelAccion.setText("Producto");
 
         textDescuento.setEditable(false);
         textDescuento.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
         textDescuento.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
         jLabel3.setText("Descuento");
 
         btn_adddesc.setBackground(new java.awt.Color(114, 151, 166));
-        btn_adddesc.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btn_adddesc.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         btn_adddesc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/add.png"))); // NOI18N
         btn_adddesc.setText("Descuento");
         btn_adddesc.setToolTipText("Agregar descuento a la venta");
@@ -316,7 +318,7 @@ public class VentasView extends javax.swing.JFrame {
         });
 
         btn_remdesc.setBackground(new java.awt.Color(114, 151, 166));
-        btn_remdesc.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btn_remdesc.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         btn_remdesc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/delete.png"))); // NOI18N
         btn_remdesc.setText("Descuento");
         btn_remdesc.setToolTipText("Eliminar descuento de la venta");
@@ -331,9 +333,9 @@ public class VentasView extends javax.swing.JFrame {
         jMenuBar1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
 
         jMenu2.setText("Productos");
-        jMenu2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jMenu2.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
 
-        menuItemNuevo.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        menuItemNuevo.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         menuItemNuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/document.png"))); // NOI18N
         menuItemNuevo.setText("Nuevo");
         menuItemNuevo.addActionListener(new java.awt.event.ActionListener() {
@@ -343,7 +345,7 @@ public class VentasView extends javax.swing.JFrame {
         });
         jMenu2.add(menuItemNuevo);
 
-        menuItemEditar.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        menuItemEditar.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         menuItemEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/edit.png"))); // NOI18N
         menuItemEditar.setText("Editar");
         menuItemEditar.addActionListener(new java.awt.event.ActionListener() {
@@ -353,7 +355,7 @@ public class VentasView extends javax.swing.JFrame {
         });
         jMenu2.add(menuItemEditar);
 
-        menuItemDesactivar.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        menuItemDesactivar.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         menuItemDesactivar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/edit.png"))); // NOI18N
         menuItemDesactivar.setText("Desactivar");
         menuItemDesactivar.addActionListener(new java.awt.event.ActionListener() {
@@ -363,7 +365,7 @@ public class VentasView extends javax.swing.JFrame {
         });
         jMenu2.add(menuItemDesactivar);
 
-        menuItemEliminar.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        menuItemEliminar.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         menuItemEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/trash_can.png"))); // NOI18N
         menuItemEliminar.setText("Eliminar");
         menuItemEliminar.setToolTipText("");
@@ -375,7 +377,7 @@ public class VentasView extends javax.swing.JFrame {
         jMenu2.add(menuItemEliminar);
         jMenu2.add(jSeparator1);
 
-        jMenuItem7.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jMenuItem7.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jMenuItem7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/dispatch.png"))); // NOI18N
         jMenuItem7.setText("Entrada de mercancias");
         jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
@@ -388,9 +390,9 @@ public class VentasView extends javax.swing.JFrame {
         jMenuBar1.add(jMenu2);
 
         jMenu3.setText("Reportes");
-        jMenu3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jMenu3.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
 
-        menuItemRepVentas.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        menuItemRepVentas.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         menuItemRepVentas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/money_bag_dollar.png"))); // NOI18N
         menuItemRepVentas.setText("Ventas");
         menuItemRepVentas.addActionListener(new java.awt.event.ActionListener() {
@@ -400,7 +402,7 @@ public class VentasView extends javax.swing.JFrame {
         });
         jMenu3.add(menuItemRepVentas);
 
-        jMenuItem6.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jMenuItem6.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jMenuItem6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/list.png"))); // NOI18N
         jMenuItem6.setText("Stock");
         jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
@@ -410,7 +412,7 @@ public class VentasView extends javax.swing.JFrame {
         });
         jMenu3.add(jMenuItem6);
 
-        menuItemRepMov.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        menuItemRepMov.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         menuItemRepMov.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/dispatch.png"))); // NOI18N
         menuItemRepMov.setText("Movimientos");
         menuItemRepMov.addActionListener(new java.awt.event.ActionListener() {
@@ -424,9 +426,9 @@ public class VentasView extends javax.swing.JFrame {
         jMenuBar1.add(jMenu4);
 
         jMenu5.setText("Usuarios");
-        jMenu5.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jMenu5.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
 
-        menuItemCUser.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        menuItemCUser.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         menuItemCUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/user_16.png"))); // NOI18N
         menuItemCUser.setText("Crear usuario");
         menuItemCUser.addActionListener(new java.awt.event.ActionListener() {
@@ -436,7 +438,7 @@ public class VentasView extends javax.swing.JFrame {
         });
         jMenu5.add(menuItemCUser);
 
-        menuItemModUser.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        menuItemModUser.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         menuItemModUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/edit.png"))); // NOI18N
         menuItemModUser.setText("Modificar usuarios");
         menuItemModUser.addActionListener(new java.awt.event.ActionListener() {
@@ -446,7 +448,7 @@ public class VentasView extends javax.swing.JFrame {
         });
         jMenu5.add(menuItemModUser);
 
-        jMenuItem4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jMenuItem4.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jMenuItem4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/password.png"))); // NOI18N
         jMenuItem4.setText("Cambiar contraseña");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
@@ -456,7 +458,7 @@ public class VentasView extends javax.swing.JFrame {
         });
         jMenu5.add(jMenuItem4);
 
-        jMenuItem8.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jMenuItem8.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jMenuItem8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/door.png"))); // NOI18N
         jMenuItem8.setText("Cerrar sesión");
         jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
@@ -493,7 +495,7 @@ public class VentasView extends javax.swing.JFrame {
                                 .addComponent(btn_adddesc)
                                 .addGap(18, 18, 18)
                                 .addComponent(btn_remdesc)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 357, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 394, Short.MAX_VALUE)
                                 .addComponent(btnLimpiar))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
@@ -1012,7 +1014,15 @@ public class VentasView extends javax.swing.JFrame {
     }
 
     private void cobrarVenta() {
-        DefaultTableModel modelo = (DefaultTableModel) tableItems.getModel();
+        boolean validEntry = false;
+        double importePago = 0, cambio = 0;
+        JLabel labelImportePagado = new JLabel("Ingrese el importe con el que se pago");
+        JLabel labelErrorVentaI = new JLabel("El total de la venta es mayor a la cantidad ingresada, intente nuevamente");
+        JLabel labelErrorVentaII = new JLabel("Se presento un problema para generar la venta");
+        JLabel labelErrorVentaIII = new JLabel("No se ha agregado ningun producto");
+        JLabel labelCambio = null;
+        
+        DefaultTableModel modelo = (DefaultTableModel) tableItems.getModel();                        
         int nRow = modelo.getRowCount(), cantidad;
         Producto p = null;
         List<ItemVentas> items = new ArrayList<>();
@@ -1033,16 +1043,48 @@ public class VentasView extends javax.swing.JFrame {
 
             //Si la venta se genera exitosamente procedemos a realizar el cobro
             if (Ventas.generaVenta(((Double) textTotal.getValue()).floatValue(), ((Double) textDescuento.getValue()).floatValue(), sesion.getUser(), items) > 0) {
-                estado = EFECTIVO;
-                actualizaElementosPantalla(estado);
+                //estado = EFECTIVO;
+                //actualizaElementosPantalla(estado);                                
+                
+                labelImportePagado.setFont(default_font);
+                labelErrorVentaI.setFont(default_font);
+                
+                do{
+                    try{
+                        importePago = Double.parseDouble(JOptionPane.showInputDialog(null, labelImportePagado));
+                        
+                        if (importePago < (Double) textTotal.getValue())
+                            JOptionPane.showMessageDialog(this, labelErrorVentaI, "Mensaje", JOptionPane.ERROR_MESSAGE);
+                        else                        
+                            validEntry = true;
+                    }catch(HeadlessException | NumberFormatException e){
+                        
+                    }catch(NullPointerException e){                        
+                        break;
+                    }
+                    
+                }while(!validEntry);
+                
+                if (validEntry) {                                       
+                    cambio = importePago - (Double) textTotal.getValue();
+                    
+                    labelCambio = new JLabel("Cambio: " + cambio);
+                    labelCambio.setFont(default_font);
+                    
+                    JOptionPane.showMessageDialog(this, labelCambio, "Cambio", JOptionPane.INFORMATION_MESSAGE);
+                
+                    reiniciarVenta(0);
+                    estado = VENTA;                    
+                }                                
 
             } else {
-                label.setText("Se presento un problema para generar la venta");
-                JOptionPane.showMessageDialog(null, label);
+                labelErrorVentaII.setFont(default_font);
+                                                
+                JOptionPane.showMessageDialog(null, labelErrorVentaII);
             }
         } else {
-            label.setText("No se ha agregado ningun producto");
-            JOptionPane.showMessageDialog(null, label);
+            labelErrorVentaIII.setFont(default_font);            
+            JOptionPane.showMessageDialog(null, labelErrorVentaIII);
         }
     }
 
