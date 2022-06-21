@@ -9,6 +9,7 @@ import com.mxrck.autocompleter.TextAutoCompleter;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -229,7 +230,8 @@ public class VentasView extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Panaderia Tere");
-        setBackground(new java.awt.Color(242, 242, 242));
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        setLocationByPlatform(true);
 
         textBuscar.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         textBuscar.setToolTipText("Introduzca el producto aquí");
@@ -1020,7 +1022,15 @@ public class VentasView extends javax.swing.JFrame {
     }
 
     private void cobrarVenta() {
-        DefaultTableModel modelo = (DefaultTableModel) tableItems.getModel();
+        boolean validEntry = false;
+        double importePago = 0, cambio = 0;
+        JLabel labelImportePagado = new JLabel("Ingrese el importe con el que se pago");
+        JLabel labelErrorVentaI = new JLabel("El total de la venta es mayor a la cantidad ingresada, intente nuevamente");
+        JLabel labelErrorVentaII = new JLabel("Se presento un problema para generar la venta");
+        JLabel labelErrorVentaIII = new JLabel("No se ha agregado ningun producto");
+        JLabel labelCambio = null;
+        
+        DefaultTableModel modelo = (DefaultTableModel) tableItems.getModel();                        
         int nRow = modelo.getRowCount(), cantidad;
         Producto p = null;
         List<ItemVentas> items = new ArrayList<>();
@@ -1041,16 +1051,48 @@ public class VentasView extends javax.swing.JFrame {
 
             //Si la venta se genera exitosamente procedemos a realizar el cobro
             if (Ventas.generaVenta(((Double) textTotal.getValue()).floatValue(), ((Double) textDescuento.getValue()).floatValue(), sesion.getUser(), items) > 0) {
-                estado = EFECTIVO;
-                actualizaElementosPantalla(estado);
+                //estado = EFECTIVO;
+                //actualizaElementosPantalla(estado);                                
+                
+                labelImportePagado.setFont(default_font);
+                labelErrorVentaI.setFont(default_font);
+                
+                do{
+                    try{
+                        importePago = Double.parseDouble(JOptionPane.showInputDialog(null, labelImportePagado));
+                        
+                        if (importePago < (Double) textTotal.getValue())
+                            JOptionPane.showMessageDialog(this, labelErrorVentaI, "Mensaje", JOptionPane.ERROR_MESSAGE);
+                        else                        
+                            validEntry = true;
+                    }catch(HeadlessException | NumberFormatException e){
+                        
+                    }catch(NullPointerException e){                        
+                        break;
+                    }
+                    
+                }while(!validEntry);
+                
+                if (validEntry) {                                       
+                    cambio = importePago - (Double) textTotal.getValue();
+                    
+                    labelCambio = new JLabel("Cambio: " + cambio);
+                    labelCambio.setFont(default_font);
+                    
+                    JOptionPane.showMessageDialog(this, labelCambio, "Cambio", JOptionPane.INFORMATION_MESSAGE);
+                
+                    reiniciarVenta(0);
+                    estado = VENTA;                    
+                }                                
 
             } else {
-                label.setText("Se presento un problema para generar la venta");
-                JOptionPane.showMessageDialog(null, label);
+                labelErrorVentaII.setFont(default_font);
+                                                
+                JOptionPane.showMessageDialog(null, labelErrorVentaII);
             }
         } else {
-            label.setText("No se ha agregado ningun producto");
-            JOptionPane.showMessageDialog(null, label);
+            labelErrorVentaIII.setFont(default_font);            
+            JOptionPane.showMessageDialog(null, labelErrorVentaIII);
         }
     }
 

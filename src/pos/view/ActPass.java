@@ -53,6 +53,7 @@ public class ActPass extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Nueva contraseña");
+        setLocationByPlatform(true);
         setMinimumSize(new java.awt.Dimension(350, 170));
         setPreferredSize(new java.awt.Dimension(350, 170));
         setResizable(false);
