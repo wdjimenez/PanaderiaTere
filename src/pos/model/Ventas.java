@@ -297,5 +297,43 @@ public class Ventas {
         
         return ventas;
         
+    }
+    
+    public static List<Ventas> getTicketInfo(int nticket){
+        conn = DataBase.getConnection();
+        List<Ventas> ventas = new ArrayList<>();
+        String consulta = "SELECT date(ventas.fecha,'localtime') as fecha, time(ventas.fecha, 'localtime') as hora, " +
+"	   ventas.id as venta, productos.nombre as nombre, productosventa.cantidad, " +
+"	   productosventa.precio, productosventa.importe, usuarios.user " +
+"	   FROM ventas INNER JOIN productosventa " +
+"						ON productosventa.id_venta = ventas.id " +
+"				   INNER JOIN productos " +
+"						ON productos.id = productosventa.id_producto " +
+"                             LEFT OUTER JOIN usuarios " +
+"                                               ON ventas.user = usuarios.user " +                
+"	   WHERE ventas.id = " + nticket;
+        
+//        System.out.println(consulta);
+        try{
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(consulta);
+            while (rs.next()) {
+                Ventas v = new Ventas();
+                v.setIdVenta(rs.getInt("venta"));                
+                v.setCantidad(rs.getInt("cantidad"));
+                v.setFecha(rs.getString("fecha"));
+                v.setHora(rs.getString("hora"));
+                v.setImporte(rs.getFloat("importe"));
+                v.setNombre(rs.getString("nombre"));
+                v.setPrecio(rs.getFloat("precio"));    
+                v.usuario = rs.getString("user");
+                ventas.add(v);
+            }
+        }catch (SQLException ex) {
+            Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return ventas;
+        
     }   
 }

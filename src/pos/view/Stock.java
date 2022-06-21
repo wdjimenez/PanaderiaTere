@@ -7,6 +7,8 @@ package pos.view;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import pos.model.Producto;
 import pos.model.ComboItem;
@@ -18,6 +20,8 @@ import pos.util.Config;
  * @author wdjimenez
  */
 public class Stock extends javax.swing.JDialog {
+    private Font default_font = new Font("Roboto", Font.BOLD, 18);
+    
     private Usuario sesion;
     /**
      * Creates new form Stock
@@ -80,6 +84,7 @@ public class Stock extends javax.swing.JDialog {
         });
 
         jButton1.setBackground(new java.awt.Color(114, 151, 166));
+        jButton1.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jButton1.setText("Agregar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -98,11 +103,9 @@ public class Stock extends javax.swing.JDialog {
                     .addComponent(jLabel1))
                 .addGap(36, 36, 36)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1)
                     .addComponent(comboProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(textCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(jButton1)))
+                    .addComponent(textCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(13, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -118,7 +121,7 @@ public class Stock extends javax.swing.JDialog {
                     .addComponent(textCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jButton1)
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         pack();
@@ -189,22 +192,30 @@ public class Stock extends javax.swing.JDialog {
     }
 
     private void actualizarStock() {
+        JLabel labelMensaje = null;
+        
         ComboItem item = (ComboItem)comboProductos.getSelectedItem();     
-        int cantidad = ((Long)textCantidad.getValue()).intValue();
+        int cantidad = ((Long)textCantidad.getValue()).intValue();               
         
         if (cantidad <= 0) {
-            JOptionPane.showMessageDialog(null, "La cantidad debe ser mayor a 0");
+            labelMensaje = new JLabel("La cantidad debe ser mayor a 0");
+            labelMensaje.setFont(default_font);
+            JOptionPane.showMessageDialog(null, labelMensaje);
             return;
         }
         
         if(Producto.addStock(item.getIdProd(), cantidad, sesion.getUser())){
-            JOptionPane.showMessageDialog(null, "Se actualizo el stock del producto");
+            labelMensaje = new JLabel("Se actualizo el stock del producto");
+            labelMensaje.setFont(default_font);
+            JOptionPane.showMessageDialog(null, labelMensaje);
             //this.dispose();                        
             
             textCantidad.setValue(new Long("0"));
             
         }else
-            JOptionPane.showMessageDialog(null, "Se presento un problema al actualizar el producto");
+            labelMensaje = new JLabel("Se presento un problema al actualizar el producto");
+            labelMensaje.setFont(default_font);
+            JOptionPane.showMessageDialog(null, labelMensaje);
         
     }
 }

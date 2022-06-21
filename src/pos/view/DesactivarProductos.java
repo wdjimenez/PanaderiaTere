@@ -62,6 +62,7 @@ public class DesactivarProductos extends javax.swing.JDialog  {
         setTitle("Desactivar productos");
 
         btnActualizar.setBackground(new java.awt.Color(114, 151, 166));
+        btnActualizar.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         btnActualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/edit.png"))); // NOI18N
         btnActualizar.setText("Actualizar");
         btnActualizar.addActionListener(new java.awt.event.ActionListener() {
@@ -87,10 +88,10 @@ public class DesactivarProductos extends javax.swing.JDialog  {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(239, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(221, 221, 221)
                 .addComponent(btnActualizar)
-                .addGap(219, 219, 219))
+                .addContainerGap(223, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
@@ -100,9 +101,9 @@ public class DesactivarProductos extends javax.swing.JDialog  {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(319, Short.MAX_VALUE)
+                .addContainerGap(307, Short.MAX_VALUE)
                 .addComponent(btnActualizar)
-                .addContainerGap())
+                .addGap(17, 17, 17))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()

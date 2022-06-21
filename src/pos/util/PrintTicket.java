@@ -234,7 +234,7 @@ public class PrintTicket implements Printable {
         return commandSet;
     }
 
-    private static boolean feedPrinter(byte[] b) {
+    public static boolean feedPrinter(byte[] b) {
         try {
             AttributeSet attrSet = new HashPrintServiceAttributeSet(new PrinterName("POS-58C", null)); //EPSON TM-U220 ReceiptE4
 

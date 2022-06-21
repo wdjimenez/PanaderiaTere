@@ -143,7 +143,7 @@ public class RepVentas extends javax.swing.JFrame {
         }
 
         jButton2.setBackground(new java.awt.Color(114, 151, 166));
-        jButton2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jButton2.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jButton2.setText("Buscar");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -156,7 +156,7 @@ public class RepVentas extends javax.swing.JFrame {
         textTotal.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
         textTotal.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
         jLabel1.setText("Venta Total");
 
         tableDescuentos.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -178,17 +178,17 @@ public class RepVentas extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(tableDescuentos);
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
         jLabel3.setText("Ventas");
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
         jLabel4.setText("Descuentos");
 
         dateFrom.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
         dateTo.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
-        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jLabel5.setText("Fechas");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

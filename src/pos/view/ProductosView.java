@@ -64,6 +64,7 @@ public class ProductosView extends javax.swing.JDialog {
         textNombre.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
 
         btnAceptar.setBackground(new java.awt.Color(114, 151, 166));
+        btnAceptar.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/document.png"))); // NOI18N
         btnAceptar.setText("Crear");
         btnAceptar.addActionListener(new java.awt.event.ActionListener() {
@@ -117,7 +118,7 @@ public class ProductosView extends javax.swing.JDialog {
                     .addComponent(textStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(btnAceptar)
-                .addContainerGap(8, Short.MAX_VALUE))
+                .addContainerGap(7, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

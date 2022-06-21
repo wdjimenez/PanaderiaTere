@@ -26,6 +26,7 @@ import pos.model.ItemVentas;
 import pos.model.Usuario;
 import pos.model.Ventas;
 import pos.util.Config;
+import pos.util.PrintTicket;
 
 /**
  *
@@ -638,9 +639,7 @@ public class VentasView extends javax.swing.JFrame {
     }//GEN-LAST:event_textTotalActionPerformed
 
     private void btnCobrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCobrarActionPerformed
-
         cobrarVenta();
-
     }//GEN-LAST:event_btnCobrarActionPerformed
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
@@ -900,7 +899,7 @@ public class VentasView extends javax.swing.JFrame {
             p = masvendidos.get(i);
             if (p != null) {                            
                 btemp = new JButton(p.getNombre());
-                btemp.setFont(new Font("Tahoma", Font.BOLD, 12));//(default_font);
+                btemp.setFont(default_font);//(default_font);
                 btemp.setForeground(Color.decode(Config.ColorText));
                 btemp.setBackground(Color.decode(Config.ColorElement));
                 btemp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/iconos/bread_32.png")));
@@ -1024,6 +1023,7 @@ public class VentasView extends javax.swing.JFrame {
         
         DefaultTableModel modelo = (DefaultTableModel) tableItems.getModel();                        
         int nRow = modelo.getRowCount(), cantidad;
+        int nticket;
         Producto p = null;
         List<ItemVentas> items = new ArrayList<>();
         ItemVentas iv = null;
@@ -1042,7 +1042,8 @@ public class VentasView extends javax.swing.JFrame {
             }
 
             //Si la venta se genera exitosamente procedemos a realizar el cobro
-            if (Ventas.generaVenta(((Double) textTotal.getValue()).floatValue(), ((Double) textDescuento.getValue()).floatValue(), sesion.getUser(), items) > 0) {
+            nticket = Ventas.generaVenta(((Double) textTotal.getValue()).floatValue(), ((Double) textDescuento.getValue()).floatValue(), sesion.getUser(), items);
+            if ( nticket > 0) {
                 //estado = EFECTIVO;
                 //actualizaElementosPantalla(estado);                                
                 
@@ -1072,9 +1073,12 @@ public class VentasView extends javax.swing.JFrame {
                     labelCambio.setFont(default_font);
                     
                     JOptionPane.showMessageDialog(this, labelCambio, "Cambio", JOptionPane.INFORMATION_MESSAGE);
+                    //mandamos a imprimir el ticket
+                    imprimirTicket(nticket);                                       
                 
                     reiniciarVenta(0);
-                    estado = VENTA;                    
+                    estado = VENTA;      
+                    textBuscar.requestFocus();
                 }                                
 
             } else {
@@ -1214,6 +1218,66 @@ public class VentasView extends javax.swing.JFrame {
 //        System.out.println("Efectivo: " + Double.toString(efectivo));
 //        System.out.println("Total: " + Double.toString(total));
         return (float) (efectivo - total);
+    }
+    
+    private void imprimirTicket(int ticket){
+        double total = 0;        
+        JLabel label = null;
+        
+        List<Ventas> ticketItems = Ventas.getTicketInfo(ticket);
+        
+        if (ticketItems == null){
+            label = new JLabel("No se encontro información del ticket");
+            label.setFont(default_font);
+            JOptionPane.showMessageDialog(null, label);
+            return;
+        }
+        
+        
+        PrintTicket p = new PrintTicket();        
+
+        p.resetAll();
+        p.initialize();
+        //p.feedBack((byte) 2);
+        //p.color(0);
+        p.emphasized(true);
+        p.alignCenter();
+        p.setText("Panadería D’ Alejandra");
+        p.emphasized(false);
+        p.newLine();
+        p.setText("Galena 1 esq. mártires de Tacubaya");
+        p.newLine();
+        p.setText("Primera Sección");
+        p.newLine();
+        p.setText("Tlacolula de Matamoros");
+        p.newLine();
+        p.addLineSeperator();    
+        p.alignLeft();
+        p.newLine();
+        p.setText("Cant.\tProducto\t\tImporte");
+        p.newLine();
+        p.addLineSeperator();
+        
+        for( Ventas v : ticketItems){
+            p.setText(v.getCantidad() + "\t" + v.getNombre() + "\t\t" + v.getImporte());
+            p.newLine();            
+            
+            total += v.getImporte();
+        }
+        
+//        p.setText("1" + "\t" + "Capricho" + "\t\t" + "10.00");
+//        p.newLine();
+//        p.setText("2" + "\t" + "Cazuela" + "\t\t" + "20.00");
+//        p.newLine();
+//        p.setText("10" + "\t" + "Cuernos" + "\t\t" + "30.00");        
+//        p.newLine();
+        p.newLine();
+        p.setText("Total: " + total);        
+        p.newLine();        
+        p.feed((byte) 3);
+        //p.finit();
+
+        PrintTicket.feedPrinter(p.finalCommandSet().getBytes());                                
     }
 
 }
