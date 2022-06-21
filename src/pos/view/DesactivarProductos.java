@@ -24,7 +24,7 @@ public class DesactivarProductos extends javax.swing.JDialog  {
      * Creates new form DesactivarProductos
      */
     
-    private Font default_font = new Font("Tahoma", Font.BOLD, 18);
+    private Font default_font = new Font("Roboto", Font.BOLD, 18);
     
     public DesactivarProductos(java.awt.Frame parent, boolean modal) {
 //    public DesactivarProductos() {
@@ -88,9 +88,9 @@ public class DesactivarProductos extends javax.swing.JDialog  {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(452, Short.MAX_VALUE)
+                .addContainerGap(239, Short.MAX_VALUE)
                 .addComponent(btnActualizar)
-                .addContainerGap())
+                .addGap(219, 219, 219))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()

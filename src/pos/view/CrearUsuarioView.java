@@ -29,26 +29,7 @@ public class CrearUsuarioView extends javax.swing.JDialog {
     public CrearUsuarioView(java.awt.Frame parent, boolean modal){//Usuario s, Boolean edit) {
         super(parent, modal);
         initComponents();
-        
-//        this.sesion = s;
-//        this.edit = edit;
-//        
-//        if(!this.edit){//Cuando es visualizar desactivamos algunso campos
-//            textUsuario.setEnabled(false);
-//            textPass.setEnabled(false);                        
-//            
-//            
-//            
-//            textUsuario.setText(sesion.getUser());
-//            textNombre.setText(sesion.getNombre());
-//            textApellidos.setText(sesion.getApellido());
-//            
-//            if(sesion.getAdmin() == 1)
-//                flagAdmin.setEnabled(true);
-//            else
-//                flagAdmin.setEnabled(false);
-//        }
-        
+       
         getContentPane().setBackground(Color.decode(Config.ColorContent));
         jButton1.setBackground(Color.decode(Config.ColorElement));
         jButton1.setForeground(Color.decode(Config.ColorText));
@@ -87,10 +68,10 @@ public class CrearUsuarioView extends javax.swing.JDialog {
         setBackground(new java.awt.Color(255, 255, 255));
         setResizable(false);
 
-        labelPanaderia.setFont(new java.awt.Font("Tahoma", 1, 55)); // NOI18N
+        labelPanaderia.setFont(new java.awt.Font("Roboto", 1, 55)); // NOI18N
         labelPanaderia.setText("Panaderia");
 
-        labelTere.setFont(new java.awt.Font("Tahoma", 1, 55)); // NOI18N
+        labelTere.setFont(new java.awt.Font("Roboto", 1, 55)); // NOI18N
         labelTere.setText("Tere");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -117,17 +98,17 @@ public class CrearUsuarioView extends javax.swing.JDialog {
                 .addContainerGap(99, Short.MAX_VALUE))
         );
 
-        textUsuario.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        textUsuario.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jLabel1.setText("Usuario");
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jLabel2.setText("Contraseña");
 
-        textPass.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        textPass.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jButton1.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jButton1.setText("Crear");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -135,14 +116,14 @@ public class CrearUsuarioView extends javax.swing.JDialog {
             }
         });
 
-        textNombre.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        textNombre.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jLabel3.setText("Nombre");
 
-        textApellidos.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        textApellidos.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jLabel4.setText("Apellidos");
 
         flagAdmin.setText("Administrador");
@@ -154,10 +135,6 @@ public class CrearUsuarioView extends javax.swing.JDialog {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1)
-                        .addGap(111, 111, 111))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(27, 27, 27)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -172,8 +149,11 @@ public class CrearUsuarioView extends javax.swing.JDialog {
                                 .addComponent(textApellidos)
                                 .addComponent(textNombre)
                                 .addComponent(textUsuario)
-                                .addComponent(textPass, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(33, Short.MAX_VALUE))))
+                                .addComponent(textPass, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(165, 165, 165)
+                        .addComponent(jButton1)))
+                .addContainerGap(51, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
