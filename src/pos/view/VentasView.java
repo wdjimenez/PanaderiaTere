@@ -1074,7 +1074,16 @@ public class VentasView extends javax.swing.JFrame {
                     
                     JOptionPane.showMessageDialog(this, labelCambio, "Cambio", JOptionPane.INFORMATION_MESSAGE);
                     //mandamos a imprimir el ticket
-                    imprimirTicket(nticket);                                       
+                    labelCambio = new JLabel("¿Desea reimprimir el ticket?");
+                    labelCambio.setFont(default_font);
+                    boolean reimprimir = true;
+                    
+                    do{
+                        imprimirTicket(nticket);
+                        
+                        if (!(JOptionPane.YES_OPTION == ( JOptionPane.showConfirmDialog(this, labelCambio))))
+                            reimprimir = false;                        
+                    }while(reimprimir);
                 
                     reiniciarVenta(0);
                     estado = VENTA;      
@@ -1237,29 +1246,68 @@ public class VentasView extends javax.swing.JFrame {
         PrintTicket p = new PrintTicket();        
 
         p.resetAll();
-        p.initialize();
+        p.initialize();        
         //p.feedBack((byte) 2);
         //p.color(0);
         p.emphasized(true);
         p.alignCenter();
-        p.setText("Panadería D’ Alejandra");
+        p.setText("Panaderia D' Alejandra");
         p.emphasized(false);
         p.newLine();
-        p.setText("Galena 1 esq. mártires de Tacubaya");
+        p.setText("Galena 1 esq. martires");
         p.newLine();
-        p.setText("Primera Sección");
+        p.setText("de Tacubaya");
+        p.newLine();
+        p.setText("Primera Seccion");
         p.newLine();
         p.setText("Tlacolula de Matamoros");
         p.newLine();
         p.addLineSeperator();    
         p.alignLeft();
         p.newLine();
-        p.setText("Cant.\tProducto\t\tImporte");
+        //4 + 20 + 8
+        p.setText("Cant. Producto        Importe");
         p.newLine();
         p.addLineSeperator();
         
+        int MAX_NOMBRE = 20;
+        int MAX_CANTIDAD = 4;
+        int MAX_IMPORTE = 8;
+        char[] nombre;// = new char[20];
+        char[] cantidad;// = new char[4];
+        char[] importe;// = new char[8];
+        String linea = "";
+        
         for( Ventas v : ticketItems){
-            p.setText(v.getCantidad() + "\t" + v.getNombre() + "\t\t" + v.getImporte());
+            nombre = v.getNombre().toCharArray();
+            cantidad = Integer.toString(v.getCantidad()).toCharArray();
+            importe = Double.toString(v.getImporte()).toCharArray();
+
+            //p.setText(cantidad);// + nombre.toString() + importe.toString());
+            
+            for(int i = 0; i < MAX_CANTIDAD; i++){                
+                if(i < cantidad.length)
+                    linea += cantidad[i];
+                else
+                    linea += " ";
+            }
+            
+            for(int i = 0; i < MAX_NOMBRE; i++)
+                if(i < nombre.length)
+                    linea += nombre[i];
+                else
+                    linea += " ";
+            
+            for(int i = 0; i < MAX_IMPORTE; i++)
+                if(i < importe.length)
+                    linea += importe[i];
+                else
+                    linea += " ";
+            
+            p.setText(linea);
+            
+            linea = "";
+                
             p.newLine();            
             
             total += v.getImporte();

@@ -233,6 +233,20 @@ public class PrintTicket implements Printable {
     public String finalCommandSet() {
         return commandSet;
     }
+    
+    public String setCharacterLatinCode() {
+        final byte[] characterCode = {27, 82, 12};
+        String s = new String(characterCode);
+        commandSet += s;
+        return s;
+    }
+    
+    public String setAbsolutePos    (int n) {
+        final byte[] characterCode = {27, 36, 12};
+        String s = new String(characterCode);
+        commandSet += s;
+        return s;
+    }
 
     public static boolean feedPrinter(byte[] b) {
         try {
